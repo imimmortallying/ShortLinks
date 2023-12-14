@@ -1,5 +1,4 @@
 
-import { SendRequest } from "Features/Request/SendRequest";
 import cls from "./Styles/App.module.scss"
 import { MainPage } from "Pages/MainPage/MainPage";
 import { useEffect, useState } from "react";
@@ -17,7 +16,6 @@ const App = () => {
     return (
 
         <MainPage>
-            {/* <SendRequest/> */}
 
         </MainPage>
 

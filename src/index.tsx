@@ -1,10 +1,16 @@
 import App from "App/App";
-import { render } from "react-dom";
+import { store } from "App/ReduxStore/store";
+// import { render } from "react-dom";
 
-render(
+import { createRoot } from 'react-dom/client';
+const container = document.getElementById('root');
+const root = createRoot(container); // createRoot(container!) if you use TypeScript
 
-                <App />,
+import { Provider } from 'react-redux'
 
+root.render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+);
 
-    document.getElementById('root')
-)
