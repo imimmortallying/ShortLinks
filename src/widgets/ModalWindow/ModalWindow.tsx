@@ -4,6 +4,10 @@ import cls from "./ModalWindow.module.scss"
 import { Button, Input, Modal, Typography } from "antd";
 import { useState } from "react";
 import { AuthService } from "Services/AuthService";
+import { useDispatch } from "react-redux";
+import { req_setUser } from "Features/counter/authSlice";
+import { useAppDispatch } from "App/hooks/hooks";
+import { req_ModalLogin } from "./services/req_ModalLogin";
 
 interface ModalWindowProps {
     className?: string;
@@ -12,6 +16,11 @@ interface ModalWindowProps {
 }
 
 export const ModalWindow = ({isOpened, handleCloseModal}:ModalWindowProps) => {
+
+
+    // redux actions
+
+    const dispatchAsync = useAppDispatch();
 
 
     // стейты для input
@@ -62,7 +71,8 @@ export const ModalWindow = ({isOpened, handleCloseModal}:ModalWindowProps) => {
             </div>
 
             <div className={cls.buttonsBlock}>
-                <Button onClick={() => AuthService.login(username, password)}>Логин</Button>
+                <Button onClick={() => dispatchAsync(req_ModalLogin({username, password}))}>Логин</Button>
+                {/* регистрация не взаимодействует с redux, поэтому без обертки action */}
                 <Button onClick={() => AuthService.registration(username, password)}>Регистрация</Button>
             </div>
 
