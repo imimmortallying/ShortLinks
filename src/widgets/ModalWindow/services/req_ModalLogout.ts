@@ -1,21 +1,21 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from 'axios';
 import $api, { API_URL } from "../../../http";
-import { AuthResponse } from "Models/response/AuthResponse";
-import { req_setUser } from "Features/counter/authSlice";
+import { logoutUser } from "Features/auth/authSlice";
 
-interface req_ModalRegistration {
+
+interface req_ModalLogout {
     username: string;
     password: string;
 }
 
-export const req_ModalRegistration = createAsyncThunk <Number, req_ModalRegistration, { rejectValue: string }>(
-    'req_ModalRegistration',
+export const req_ModalLogout = createAsyncThunk <Number, null, { rejectValue: string }>(
+    'req_ModalLogout',
     async (authData, thunkAPI) => {
         try {
-            const response = await $api.post<AuthResponse>('/registration', authData)
-            console.log(response)
-            return response.status
+            const response =  await $api.post('/logout');
+            localStorage.removeItem('accessToken');
+            thunkAPI.dispatch(logoutUser());
+            return response.status;
         } catch (e) {
             console.log(e)
             return thunkAPI.rejectWithValue(e.response.status)

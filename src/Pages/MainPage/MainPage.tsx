@@ -5,6 +5,8 @@ import { FC, ReactNode, useCallback, useState } from "react";
 import { Button, Input, Modal, Typography } from "antd";
 import { AuthService } from "Services/AuthService";
 import { ModalWindow } from "widgets/ModalWindow/ModalWindow";
+import { req_ModalLogout } from "widgets/ModalWindow/services/req_ModalLogout";
+import { useAppDispatch } from "App/hooks/hooks";
 
 interface MainPageProps {
     className?: string;
@@ -12,6 +14,8 @@ interface MainPageProps {
 }
 
 export const MainPage: FC<MainPageProps> = ({ className }: MainPageProps) => {
+
+    const dispatchAsync = useAppDispatch();
 
     //modal state and handlers
     const [isOpened, setOpen] = useState(false);
@@ -32,7 +36,7 @@ export const MainPage: FC<MainPageProps> = ({ className }: MainPageProps) => {
 
             <ModalWindow isOpened={isOpened} handleCloseModal={handleCloseModal}></ModalWindow>
 
-            <Button onClick={()=> AuthService.logout()}>Выйти</Button>
+            <Button onClick={()=> dispatchAsync(req_ModalLogout())}>Выйти</Button>
         </div>
     );
 };
