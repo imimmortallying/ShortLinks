@@ -16,6 +16,9 @@ import { AuthResponse } from "Models/response/AuthResponse";
 //         return $api.post('/logout')
 //     }
 // }
+interface linksResponse {
+    links:string
+}
 
 export const AuthService = {
     async login(username: string, password: string): Promise<AxiosResponse<AuthResponse>> {
@@ -28,7 +31,7 @@ export const AuthService = {
         }
 
     },
-
+    
     // нет необходимости использовать $api т.к. при регистрации я не использую токен
     // поэтому перехватчик не нужен
     async registration(username: string, password: string): Promise<AxiosResponse<AuthResponse>> {
@@ -38,13 +41,23 @@ export const AuthService = {
             console.log(e.response?.data)
         }
     },
-
+    
     async logout(): Promise<void> {
         try {
             localStorage.removeItem('accessToken');
             return await $api.post('/logout');
         } catch (e) {
             console.log(e)
+        }
+    },
+    
+    async loadLinks(): Promise<AxiosResponse<linksResponse>> {
+        try {
+            const response = await $api.get<linksResponse>('/links');
+            console.log(response);
+            return response
+        } catch (e) {
+            console.log(e.response?.data)
         }
 
     },

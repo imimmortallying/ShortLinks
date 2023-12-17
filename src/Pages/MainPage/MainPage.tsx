@@ -25,7 +25,7 @@ export const MainPage: FC<MainPageProps> = ({ className }: MainPageProps) => {
     const showModal = () => {
         setOpen(true);
     };
- 
+
     const handleCloseModal = () => {
         console.log('Clicked cancel button');
         setOpen(false);
@@ -40,11 +40,17 @@ export const MainPage: FC<MainPageProps> = ({ className }: MainPageProps) => {
             <ModalWindow isOpened={isOpened} handleCloseModal={handleCloseModal}></ModalWindow>
 
             <div>
-            {authUsername
-             ? <Button onClick={()=> dispatchAsync(req_MainPagelogout())}>Выйти</Button> 
-             : ''}
-             </div>
+                {authUsername
+                    ? <Button onClick={() => dispatchAsync(req_MainPagelogout())}>Выйти</Button>
+                    : ''}
+            </div>
             
+            <div>
+                {authUsername
+                    ? <Button onClick={() => AuthService.loadLinks()}>Ссылки</Button>
+                    : ''}
+            </div>
+
         </div>
     );
 };
