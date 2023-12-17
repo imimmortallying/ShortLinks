@@ -3,13 +3,13 @@ import $api, { API_URL } from "../../../http";
 import { logoutUser } from "Features/auth/authSlice";
 
 
-interface req_ModalLogout {
+interface req_MainPagelogout {
     username: string;
     password: string;
 }
 
-export const req_ModalLogout = createAsyncThunk <Number, null, { rejectValue: string }>(
-    'req_ModalLogout',
+export const req_MainPagelogout = createAsyncThunk <Number, null, { rejectValue: string }>(
+    'req_MainPagelogout',
     async (authData, thunkAPI) => {
         try {
             const response =  await $api.post('/logout');
