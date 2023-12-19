@@ -1,10 +1,32 @@
-import { AxiosResponse } from "axios";
-import $api from "../../../http";
+import axios, { AxiosResponse } from "axios";
+import $api, { API_URL } from "../../../http";
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
+
 
 export const linksService = {
     async sendLinkAuth(link: string): Promise<AxiosResponse> {
         try {
-            const response = await $api.post('/sendLink', { authOrAnon:'auth', link});
+            const response = await $api.post('/sendLink', { authOrAnon: 'auth', link });
+            return response
+        } catch (e) {
+            console.log(e.response?.data)
+        }
+
+    },
+    async sendLinkAnon(link: string): Promise<AxiosResponse> {
+        try {
+
+            //fingerprint init
+            const fpPromise = FingerprintJS.load();
+
+            const fingerprint = async () => {
+                // Get the visitor identifier when you need it.
+                const fp = await fpPromise;
+                const result = await fp.get();
+                console.log(result.visitorId)
+                return result.visitorId
+            }
+            const response = await axios.post(`${API_URL}/sendLink`, { authOrAnon: 'anon', link, fingerprint: await fingerprint() }, { withCredentials: true });
             return response
         } catch (e) {
             console.log(e.response?.data)
