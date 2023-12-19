@@ -9,10 +9,11 @@ import { req_MainPagelogout } from "Pages/MainPage/services/req_MainPageLogout";
 import { useAppDispatch } from "App/hooks/hooks";
 import { useSelector } from "react-redux";
 import { selectUsername } from "Features/auth/authSlice";
+import { SendLinkBlock } from "Features/SendLinkBlock/SendLinkBlock";
 
 interface MainPageProps {
     className?: string;
-    children?: ReactNode;
+    // children?: ReactNode;
 }
 
 export const MainPage: FC<MainPageProps> = ({ className }: MainPageProps) => {
@@ -39,6 +40,7 @@ export const MainPage: FC<MainPageProps> = ({ className }: MainPageProps) => {
 
             <ModalWindow isOpened={isOpened} handleCloseModal={handleCloseModal}></ModalWindow>
 
+            <SendLinkBlock></SendLinkBlock>
             <div>
                 {authUsername
                     ? <Button onClick={() => dispatchAsync(req_MainPagelogout())}>Выйти</Button>

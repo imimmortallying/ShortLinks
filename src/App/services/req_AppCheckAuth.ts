@@ -21,7 +21,7 @@ export const req_AppCheckAuth = createAsyncThunk <Number, null, { rejectValue: s
             return response.status;
         } catch (e) {
             // thunkAPI.dispatch(logoutUser());
-            console.log(e)
+            console.log('рефреш ошибка', e)
             return thunkAPI.rejectWithValue(e.response.status)
         }
 

@@ -15,12 +15,12 @@ export const req_ModalLogin = createAsyncThunk <Number, req_ModalLogin, { reject
         try {
             const response = await $api.post<AuthResponse>('/login', authData);
             console.log(response)
-            localStorage.setItem('accessToken', response.data.accessToken);
+            localStorage.setItem('accessToken', response.data?.accessToken);
             thunkAPI.dispatch(req_setUser(response.data.username))
             return response.status
         } catch (e) {
-            console.log(e)
-            return thunkAPI.rejectWithValue(e.response.status)
+            console.log(e);
+            return thunkAPI.rejectWithValue(e.response.status);
         }
 
     }
