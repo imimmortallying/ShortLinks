@@ -4,6 +4,8 @@ import { MainPage } from "Pages/MainPage/MainPage";
 import { useEffect, useState } from "react";
 import { req_AppCheckAuth } from "./services/req_AppCheckAuth";
 import { useAppDispatch } from "./hooks/hooks";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { RedirectPage } from "Pages/RedirectPage/RedirectPage";
 
 
 const App = () => {
@@ -22,10 +24,13 @@ const App = () => {
 
 
     return (
+        <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+          <Route path="*" element={<RedirectPage />} />
+        </Routes>
+      </BrowserRouter>
 
-        <MainPage>
-
-        </MainPage>
 
     )
 }
