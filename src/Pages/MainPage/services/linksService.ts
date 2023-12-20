@@ -27,10 +27,17 @@ export const linksService = {
                 return result.visitorId
             }
             const response = await axios.post(`${API_URL}/sendLink`, { authOrAnon: 'anon', link, fingerprint: await fingerprint() }, { withCredentials: true });
-            return response
+            return response.data
         } catch (e) {
             console.log(e.response?.data)
         }
-
     },
+    async findLinkByAlias(alias:string): Promise<{foundLink:string}> {
+        try {
+            const response = await axios.post(`http://localhost:5000/redirect`, {alias:alias});
+            return response.data;
+        } catch (e) {
+            console.log(e.response?.data)
+        }
+    }
 }

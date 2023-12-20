@@ -54,7 +54,6 @@ export const AuthService = {
     async loadLinks(): Promise<AxiosResponse<linksResponse>> {
         try {
             const response = await $api.get<linksResponse>('/links');
-            console.log(response);
             return response
         } catch (e) {
             console.log(e.response?.data)

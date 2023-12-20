@@ -27,7 +27,7 @@ const App = () => {
         <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainPage />} />
-          <Route path="*" element={<RedirectPage />} />
+          <Route path=":linkAlias" element={<RedirectPage />} />
         </Routes>
       </BrowserRouter>
 
