@@ -4,3 +4,48 @@
     flex-direction: column;
     gap: 20px;
 }
+
+.Header{
+    display: flex;
+    // flex-direction: column;
+    justify-content: end;
+    height: 120px;
+}
+
+.authButtonsBlock {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+
+    width: 15%;
+}
+
+.Body{
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    // align-content: center;
+}
+
+.ResultBlock{
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ResultText {
+    margin: 0 auto;
+}
+
+.ResultLink{
+    margin: 0 auto;
+}
+
+
+
+.linkAlias{
+    margin: 0 auto;
+}   

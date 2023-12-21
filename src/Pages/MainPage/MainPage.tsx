@@ -34,24 +34,55 @@ export const MainPage: FC<MainPageProps> = ({ className }: MainPageProps) => {
 
     return (
         <div className={classNames(cls.MainPage, {}, [className])}>
-            <Button type="primary" onClick={showModal}>
-                Вход/регистрация
-            </Button>
-
             <ModalWindow isOpened={isOpened} handleCloseModal={handleCloseModal}></ModalWindow>
 
-            <SendLinkBlock></SendLinkBlock>
-            <div>
-                {authUsername
-                    ? <Button onClick={() => dispatchAsync(req_MainPagelogout())}>Выйти</Button>
-                    : ''}
+            <div className={cls.Header}>
+
+                <div className={cls.authButtonsBlock}>
+
+                    <Button type="primary" onClick={showModal} block>
+                        Вход/регистрация
+                    </Button>
+
+                    {authUsername
+                        ? <Button onClick={() => dispatchAsync(req_MainPagelogout())} block>Выйти</Button>
+                        : ''
+                    }
+
+                </div>
+
+
+
             </div>
-            
-            <div>
+
+            <div className={cls.Body}>
+
+                <SendLinkBlock></SendLinkBlock>
+
+                <div className={cls.ResultBlock}>
+                    <div className={cls.ResultText}>Результат:</div>
+                    <div className={cls.ResultLink}>Рез</div>
+                </div>
+
                 {authUsername
-                    ? <Button onClick={() => AuthService.loadLinks()}>Ссылки</Button>
-                    : ''}
+                    ?
+                    <div className={cls.AllLinksBlock}>
+                        <Button onClick={() => AuthService.loadLinks()} >Ссылки</Button>
+                    </div>
+                    : ''
+
+                }
+
+
             </div>
+
+
+
+
+
+
+
+
 
         </div>
     );
