@@ -13,6 +13,7 @@ import { selectUsername } from "Features/authSlice/authSlice";
 import { SendLinkBlock } from "Features/SendLinkBlock/SendLinkBlock";
 import { selectAlias } from "Features/resultAliasSlice/resultAliasSlice";
 import { req_getAllUserslinks } from "Features/SendLinkBlock/services/req_getAllUsersLinks";
+import { selectAllUsersLinks } from "Features/allUsersLinksSlice/allUsersLinksSlice";
 
 interface MainPageProps {
     className?: string;
@@ -23,6 +24,7 @@ export const MainPage: FC<MainPageProps> = ({ className }: MainPageProps) => {
 
     const authUsername = useSelector(selectUsername);
     const aliasRes = useSelector(selectAlias);
+    const allUsersLinks = useSelector(selectAllUsersLinks);
 
     const dispatchAsync = useAppDispatch();
 
@@ -64,7 +66,7 @@ export const MainPage: FC<MainPageProps> = ({ className }: MainPageProps) => {
 
             <div className={cls.Body}>
 
-                <SendLinkBlock></SendLinkBlock>
+                <SendLinkBlock />
 
                 <div className={cls.ResultBlock}>
                     <Text className={cls.ResultText}>Результат:</Text>
@@ -74,23 +76,23 @@ export const MainPage: FC<MainPageProps> = ({ className }: MainPageProps) => {
                 {authUsername
                     ?
                     <div className={cls.AllLinksBlock}>
-                        {/* <Button onClick={() => AuthService.loadLinks()} >Все мои ссылки</Button> */}
-                        <Button onClick={() => dispatchAsync(req_getAllUserslinks())} >Все мои ссылки</Button>
+                        <div className={cls.allLinksHeader}>
+                            <Button onClick={() => dispatchAsync(req_getAllUserslinks())} >Все мои ссылки</Button>
+                        </div>
+                        <div className={cls.linksContainer}>
+                            {allUsersLinks.map((link) => {
+                                return <Link
+                                    href={'http://localhost:4000/' + link.alias}
+                                    className={cls.linkItem}>{'http://localhost:4000/' + link.alias}
+                                </Link>
+                            })}
+                        </div>
                     </div>
                     : ''
-
                 }
 
 
             </div>
-
-
-
-
-
-
-
-
 
         </div>
     );

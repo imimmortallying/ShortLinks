@@ -4,7 +4,7 @@ import { RootState } from 'App/ReduxStore/store';
 export const allUsersLinksSlice = createSlice({
     name: 'allUsersLinks',
     // или строка с username, либо false
-    initialState: '',
+    initialState: [],
     reducers:{
         req_setAllUsersLinks: (state, action) => {
             return state = action.payload;

@@ -50,3 +50,20 @@
 .linkAlias{
     margin: 0 auto;
 }   
+
+.AllLinksBlock{
+    display: flex;
+    flex-direction: column;
+}
+
+.linksContainer{
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.allLinksHeader{
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
