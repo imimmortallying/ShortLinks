@@ -1,6 +1,7 @@
 import { classNames } from "shared/lib/classNames/classNames";
 
-import cls from "./MainPage.module.scss"
+import cls from "./MainPage.module.scss";
+
 import { FC, ReactNode, useCallback, useState } from "react";
 import { Button, Input, Modal, Typography } from "antd";
 import { AuthService } from "Services/AuthService";
@@ -11,6 +12,7 @@ import { useSelector } from "react-redux";
 import { selectUsername } from "Features/authSlice/authSlice";
 import { SendLinkBlock } from "Features/SendLinkBlock/SendLinkBlock";
 import { selectAlias } from "Features/resultAliasSlice/resultAliasSlice";
+import { req_getAllUserslinks } from "Features/SendLinkBlock/services/req_getAllUsersLinks";
 
 interface MainPageProps {
     className?: string;
@@ -72,7 +74,8 @@ export const MainPage: FC<MainPageProps> = ({ className }: MainPageProps) => {
                 {authUsername
                     ?
                     <div className={cls.AllLinksBlock}>
-                        <Button onClick={() => AuthService.loadLinks()} >Ссылки</Button>
+                        {/* <Button onClick={() => AuthService.loadLinks()} >Все мои ссылки</Button> */}
+                        <Button onClick={() => dispatchAsync(req_getAllUserslinks())} >Все мои ссылки</Button>
                     </div>
                     : ''
 
