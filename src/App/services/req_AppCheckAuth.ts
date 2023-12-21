@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import $api, { API_URL } from "../../http";
-import { logoutUser, req_setUser } from "Features/auth/authSlice";
+import { logoutUser, req_setUser } from "Features/authSlice/authSlice";
 import axios from "axios";
 import { AuthResponse } from "Models/response/AuthResponse";
 

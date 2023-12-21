@@ -8,8 +8,9 @@ import { ModalWindow } from "widgets/ModalWindow/ModalWindow";
 import { req_MainPagelogout } from "Pages/MainPage/services/req_MainPageLogout";
 import { useAppDispatch } from "App/hooks/hooks";
 import { useSelector } from "react-redux";
-import { selectUsername } from "Features/auth/authSlice";
+import { selectUsername } from "Features/authSlice/authSlice";
 import { SendLinkBlock } from "Features/SendLinkBlock/SendLinkBlock";
+import { selectAlias } from "Features/resultAliasSlice/resultAliasSlice";
 
 interface MainPageProps {
     className?: string;
@@ -19,7 +20,11 @@ interface MainPageProps {
 export const MainPage: FC<MainPageProps> = ({ className }: MainPageProps) => {
 
     const authUsername = useSelector(selectUsername);
+    const aliasRes = useSelector(selectAlias);
+
     const dispatchAsync = useAppDispatch();
+
+    const { Text, Link } = Typography;
 
     //modal state and handlers
     const [isOpened, setOpen] = useState(false);
@@ -60,8 +65,8 @@ export const MainPage: FC<MainPageProps> = ({ className }: MainPageProps) => {
                 <SendLinkBlock></SendLinkBlock>
 
                 <div className={cls.ResultBlock}>
-                    <div className={cls.ResultText}>Результат:</div>
-                    <div className={cls.ResultLink}>Рез</div>
+                    <Text className={cls.ResultText}>Результат:</Text>
+                    <Link className={cls.ResultLink} href={aliasRes}>{aliasRes}</Link>
                 </div>
 
                 {authUsername

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import $api, { API_URL } from "../../../http";
-import { logoutUser } from "Features/auth/authSlice";
+import { logoutUser } from "Features/authSlice/authSlice";
 
 
 interface req_MainPagelogout {

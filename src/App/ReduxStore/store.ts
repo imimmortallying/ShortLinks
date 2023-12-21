@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from '../../Features/auth/authSlice'
+import authReducer from '../../Features/authSlice/authSlice'
+import resultAliasReducer from 'Features/resultAliasSlice/resultAliasSlice';
 
 export const store = configureStore({
     reducer: {
         username: authReducer,
+        resultAlias: resultAliasReducer
     },
   })
 
