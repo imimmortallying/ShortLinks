@@ -2,18 +2,20 @@ import { classNames } from "shared/lib/classNames/classNames";
 
 import cls from "./MainPage.module.scss";
 
-import { FC, ReactNode, useCallback, useState } from "react";
-import { Button, Input, Modal, Typography } from "antd";
-import { AuthService } from "shared/api/axios.services";
-import { ModalWindow } from "widgets/ModalWindow/ModalWindow";
-import { req_MainPagelogout } from "Pages/MainPage/services/req_MainPageLogout";
+import { FC, useState } from "react";
+import { Button, Typography } from "antd";
+
 import { useAppDispatch } from "App/hooks/hooks";
+
 import { useSelector } from "react-redux";
 import { selectUsername } from "Features/authSlice/authSlice";
-import { SendLinkBlock } from "Features/SendLinkBlock/SendLinkBlock";
 import { selectAlias } from "Features/resultAliasSlice/resultAliasSlice";
-import { req_getAllUserslinks } from "Features/SendLinkBlock/services/req_getAllUsersLinks";
 import { selectAllUsersLinks } from "Features/allUsersLinksSlice/allUsersLinksSlice";
+
+import { SendLinkBlock } from "widgets";
+import { ModalWindow } from "widgets/ModalWindow/ModalWindow";
+
+import { req_MainPagelogout, req_getAllUserslinks } from "shared";
 
 interface MainPageProps {
     className?: string;

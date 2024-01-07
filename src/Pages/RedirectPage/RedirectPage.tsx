@@ -1,9 +1,10 @@
-import { classNames } from "shared/lib/classNames/classNames";
+
 
 import cls from "./RedirectPage.module.scss"
 import { useParams } from "react-router-dom";
-import { linksService } from "Pages/MainPage/services/linksService";
-import { useEffect, useState } from "react";
+
+import { useEffect } from "react";
+import { classNames, linksService } from "shared";
 
 interface RedirectPageProps {
     className?: string;

@@ -1,5 +1,5 @@
 import { AuthResponse } from "shared";
-import $api, { API_URL } from "../../../shared/api/axios.api";
+import $api, { API_URL } from "../../../shared/api/axios/axios.api";
 
 import axios, { AxiosResponse } from "axios";
 
