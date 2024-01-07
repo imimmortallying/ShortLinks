@@ -3,19 +3,19 @@ import { classNames } from "shared/lib/classNames/classNames";
 import cls from "./MainPage.module.scss";
 
 import { FC, useState } from "react";
+import { useSelector } from "react-redux";
 import { Button, Typography } from "antd";
 
 import { useAppDispatch } from "App/hooks/hooks";
 
-import { useSelector } from "react-redux";
-import { selectUsername } from "Features/authSlice/authSlice";
-import { selectAlias } from "Features/resultAliasSlice/resultAliasSlice";
-import { selectAllUsersLinks } from "Features/allUsersLinksSlice/allUsersLinksSlice";
-
-import { SendLinkBlock } from "widgets";
+import { SendLinkBlock, selectAlias, selectUsername } from "widgets/SendLink";
 import { ModalWindow } from "widgets/ModalWindow/ModalWindow";
 
-import { req_MainPagelogout, req_getAllUserslinks } from "shared";
+
+import { selectAllUsersLinks } from "./models/allUsersLinksSlice";
+import { req_getAllUserslinks } from "./api/req_getAllUsersLinks";
+import { req_MainPagelogout } from "./api/req_MainPageLogout";
+
 
 interface MainPageProps {
     className?: string;

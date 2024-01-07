@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from '../../Features/authSlice/authSlice'
-import resultAliasReducer from 'Features/resultAliasSlice/resultAliasSlice';
-import allUsersLinksReducer from 'Features/allUsersLinksSlice/allUsersLinksSlice';
+import authReducer from '../../widgets/SendLink/models/authSlice'
+import resultAliasReducer from 'widgets/SendLink/models/resultAliasSlice';
+import allUsersLinksReducer from 'Pages/MainPage/models/allUsersLinksSlice';
 
 export const store = configureStore({
     reducer: {

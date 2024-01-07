@@ -5,7 +5,7 @@ import { Button, Input, Modal, Typography } from "antd";
 import { useState } from "react";
 import { AuthService } from "shared/api/axios/axios.services.auth";
 import { useDispatch } from "react-redux";
-import { req_setUser } from "Features/authSlice/authSlice";
+import { req_setUser } from "widgets/SendLink/models/authSlice";
 import { useAppDispatch } from "App/hooks/hooks";
 import { req_ModalLogin } from "./services/req_ModalLogin";
 

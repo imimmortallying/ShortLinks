@@ -4,14 +4,13 @@ import cls from "./SendLinkBlock.module.scss"
 import { Button, Input } from "antd";
 import { useState } from "react";
 
-import { useSelector } from "react-redux";
-import { selectUsername } from "Features/authSlice/authSlice";
-
 import { useAppDispatch } from "App/hooks/hooks";
+import { useSelector } from "react-redux";
 
-import { req_SendAnonLink, req_SendAuthLink } from "shared";
+import { selectUsername } from "../models/authSlice";
+import { req_SendAuthLink } from "../api/req_sendAuthLink";
+import { req_SendAnonLink } from "../api/req_sendAnonLink";
 
-req_SendAuthLink
 
 interface SendLinkBlockProps {
     className?: string;
