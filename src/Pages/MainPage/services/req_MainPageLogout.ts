@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import $api, { API_URL } from "../../../http";
+import $api, { API_URL } from "../../../shared/api/axios.api";
 import { logoutUser } from "Features/authSlice/authSlice";
 
 

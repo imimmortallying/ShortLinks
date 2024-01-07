@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import $api, { API_URL } from "../../../http";
+import $api, { API_URL } from "../../../shared/api/axios.api";
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 

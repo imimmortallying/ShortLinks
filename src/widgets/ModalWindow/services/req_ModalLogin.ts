@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
-import $api, { API_URL } from "../../../http";
-import { AuthResponse } from "Models/response/AuthResponse";
+import $api, { API_URL } from "../../../shared/api/axios.api";
 import { req_setUser } from "Features/authSlice/authSlice";
+import { AuthResponse } from "shared";
 
 interface req_ModalLogin {
     username: string;

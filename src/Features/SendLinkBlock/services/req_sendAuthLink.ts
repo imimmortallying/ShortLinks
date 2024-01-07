@@ -1,7 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
-import $api, { API_URL } from "../../../http";
-import { AuthResponse } from "Models/response/AuthResponse";
+import $api, { API_URL } from "../../../shared/api/axios.api";
 import { req_setAlias } from "Features/resultAliasSlice/resultAliasSlice";
 import { useSelector } from "react-redux";
 import { selectUsername } from "Features/authSlice/authSlice";

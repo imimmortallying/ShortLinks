@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import $api, { API_URL } from "../../http";
+import $api, { API_URL } from "../../shared/api/axios.api";
 import { logoutUser, req_setUser } from "Features/authSlice/authSlice";
 import axios from "axios";
-import { AuthResponse } from "Models/response/AuthResponse";
+import { AuthResponse } from "shared";
 
 
 interface req_AppCheckAuth {

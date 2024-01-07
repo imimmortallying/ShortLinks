@@ -3,7 +3,7 @@ import { classNames } from "shared/lib/classNames/classNames";
 import cls from "./ModalWindow.module.scss"
 import { Button, Input, Modal, Typography } from "antd";
 import { useState } from "react";
-import { AuthService } from "Services/AuthService";
+import { AuthService } from "shared/api/axios.services";
 import { useDispatch } from "react-redux";
 import { req_setUser } from "Features/authSlice/authSlice";
 import { useAppDispatch } from "App/hooks/hooks";

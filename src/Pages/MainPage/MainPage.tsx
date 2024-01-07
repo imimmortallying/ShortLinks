@@ -4,7 +4,7 @@ import cls from "./MainPage.module.scss";
 
 import { FC, ReactNode, useCallback, useState } from "react";
 import { Button, Input, Modal, Typography } from "antd";
-import { AuthService } from "Services/AuthService";
+import { AuthService } from "shared/api/axios.services";
 import { ModalWindow } from "widgets/ModalWindow/ModalWindow";
 import { req_MainPagelogout } from "Pages/MainPage/services/req_MainPageLogout";
 import { useAppDispatch } from "App/hooks/hooks";

@@ -1,7 +1,7 @@
-import $api, { API_URL } from "../../../http";
+import { AuthResponse } from "shared";
+import $api, { API_URL } from "../../../shared/api/axios.api";
 
 import axios, { AxiosResponse } from "axios";
-import { AuthResponse } from "Models/response/AuthResponse";
 
 // export default class AuthService {
 //     static async login(username:string, password:string): Promise<AxiosResponse<AuthResponse>>{
