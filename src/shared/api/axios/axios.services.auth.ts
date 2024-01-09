@@ -21,16 +21,16 @@ interface linksResponse {
 }
 
 export const AuthService = {
-    async login(username: string, password: string): Promise<AxiosResponse<AuthResponse>> {
-        try {
-            const response = await $api.post<AuthResponse>('/login', { username, password });
-            localStorage.setItem('accessToken', response.data.accessToken);
-            return response
-        } catch (e) {
-            console.log(e.response?.data)
-        }
+    // async login(username: string, password: string): Promise<AxiosResponse<AuthResponse>> {
+    //     try {
+    //         const response = await $api.post<AuthResponse>('/signin', { username, password });
+    //         localStorage.setItem('accessToken', response.data.accessToken);
+    //         return response
+    //     } catch (e) {
+    //         console.log(e.response?.data)
+    //     }
 
-    },
+    // },
     
     // нет необходимости использовать $api т.к. при регистрации я не использую токен
     // поэтому перехватчик не нужен

@@ -1,11 +1,11 @@
 
-import cls from "./Styles/App.module.scss"
-import { MainPage } from "Pages/MainPage/MainPage";
-import { useEffect, useState } from "react";
-import { req_AppCheckAuth } from "./services/req_AppCheckAuth";
-import { useAppDispatch } from "./hooks/hooks";
+import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { RedirectPage } from "Pages/RedirectPage/RedirectPage";
+
+import { MainPage, RedirectPage } from "Pages";
+import { useAppDispatch } from "shared";
+
+import { req_AppCheckAuth } from "./api/req_AppCheckAuth";
 
 
 const App = () => {

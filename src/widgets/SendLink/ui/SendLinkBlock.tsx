@@ -1,11 +1,12 @@
-import { classNames } from "shared/lib/classNames/classNames";
+
 
 import cls from "./SendLinkBlock.module.scss"
 import { Button, Input } from "antd";
 import { useState } from "react";
 
-import { useAppDispatch } from "App/hooks/hooks";
 import { useSelector } from "react-redux";
+
+import { useAppDispatch } from "shared";
 
 import { selectUsername } from "../models/authSlice";
 import { req_SendAuthLink } from "../api/req_sendAuthLink";
@@ -33,7 +34,7 @@ export const SendLinkBlock = ({ className }: SendLinkBlockProps) => {
 
     return (
 
-        <div className={classNames(cls.SendLinkBlock, {}, [className])}>
+        <div className={cls.SendLinkBlock}>
 
             <Input onChange={onLinkChange}></Input>
 

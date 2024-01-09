@@ -6,15 +6,13 @@ import { FC, useState } from "react";
 import { useSelector } from "react-redux";
 import { Button, Typography } from "antd";
 
-import { useAppDispatch } from "App/hooks/hooks";
-
 import { SendLinkBlock, selectAlias, selectUsername } from "widgets/SendLink";
-import { ModalWindow } from "widgets/ModalWindow/ModalWindow";
-
+import { ModalWindow } from "widgets/ModalWindow";
 
 import { selectAllUsersLinks } from "./models/allUsersLinksSlice";
 import { req_getAllUserslinks } from "./api/req_getAllUsersLinks";
 import { req_MainPagelogout } from "./api/req_MainPageLogout";
+import { useAppDispatch } from "shared";
 
 
 interface MainPageProps {
