@@ -1,7 +1,12 @@
-import { AuthResponse } from "shared";
-import $api, { API_URL } from "./axios.api";
+
 
 import axios, { AxiosResponse } from "axios";
+
+import { useMutation, useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
+
+import { AuthResponse } from "shared";
+import { $api, API_URL } from "./axios.authApi";
 
 // export default class AuthService {
 //     static async login(username:string, password:string): Promise<AxiosResponse<AuthResponse>>{
@@ -21,17 +26,17 @@ interface linksResponse {
 }
 
 export const AuthService = {
-    // async login(username: string, password: string): Promise<AxiosResponse<AuthResponse>> {
-    //     try {
-    //         const response = await $api.post<AuthResponse>('/signin', { username, password });
-    //         localStorage.setItem('accessToken', response.data.accessToken);
-    //         return response
-    //     } catch (e) {
-    //         console.log(e.response?.data)
-    //     }
+    async signin(username: string, password: string): Promise<AxiosResponse<AuthResponse>> {
+        try {
+            const response = await $api.post<AuthResponse>('/signin', { username, password });
+            localStorage.setItem('accessToken', response.data.accessToken);
+            return response
+        } catch (e) {
+            console.log(e.response?.data)
+        }
 
-    // },
-    
+    },
+
     // нет необходимости использовать $api т.к. при регистрации я не использую токен
     // поэтому перехватчик не нужен
     async registration(username: string, password: string): Promise<AxiosResponse<AuthResponse>> {
@@ -71,3 +76,20 @@ export const AuthService = {
         }
     }
 }
+
+
+
+export function useSignIn(username:string, password:string) {
+    const queryClient = useQueryClient();
+    // const navigate = useNavigate();
+    // const { enqueueSnackbar } = useSnackbar();
+  
+    const { mutate: signInMutation } = useMutation({
+        mutationFn: () => AuthService.signin(username, password),
+        // onSuccess: () => { navigate('/sadsada') },
+        onError: () => console.log('error in useSignIn query')
+    })
+      
+  
+    return signInMutation
+  }

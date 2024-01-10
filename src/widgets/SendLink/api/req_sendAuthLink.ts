@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from 'axios';
-import $api, { API_URL } from "../../../shared/api/axios/axios.api";
+
+import {$api} from "shared";
 import { req_setAlias } from "../models/resultAliasSlice";
 
 interface req_SendAuthLink {

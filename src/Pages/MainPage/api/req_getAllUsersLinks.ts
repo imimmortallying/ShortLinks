@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import $api, { API_URL } from "../../../shared/api/axios/axios.api";
+import {$api} from "shared";
 
 import { req_setAllUsersLinks } from "Pages/MainPage/models/allUsersLinksSlice";
 

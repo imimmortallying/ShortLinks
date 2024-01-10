@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import $api, { API_URL } from "../../../shared/api/axios/axios.api";
+import { $api } from "../../../shared/api/axios/axios.authApi";
 import { logoutUser } from "widgets/SendLink/models/authSlice";
 
 
