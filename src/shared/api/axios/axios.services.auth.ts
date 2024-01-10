@@ -2,10 +2,10 @@
 
 import axios, { AxiosResponse } from "axios";
 
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 // import { useNavigate } from "react-router-dom";
 
-import { AuthResponse } from "shared";
+import { AuthResponse, QUERY_KEY } from "shared";
 import { $api, API_URL } from "./axios.authApi";
 
 interface linksResponse {
@@ -13,9 +13,9 @@ interface linksResponse {
 }
 
 export const AuthService = {
-    async signin(username: string, password: string): Promise<AxiosResponse<AuthResponse>> {
+    async signin(username: string, password: string): Promise<AxiosResponse<signInResponse>> {
         try {
-            const response = await $api.post<AuthResponse>('/signin', { username, password });
+            const response = await $api.post<signInResponse>('/signin', { username, password });
             localStorage.setItem('accessToken', response.data.accessToken);
             return response
         } catch (e) {
@@ -80,14 +80,26 @@ export function useRefresh() {
     return refreshMutation
 }
 
+interface signInResponse {
+    accessToken: string,
+    user: {username:string}
+}
+
 export function useSignIn(username:string, password:string) {
-    // const queryClient = useQueryClient()
+    const queryClient = useQueryClient()
     // const navigate = useNavigate();
     // const { enqueueSnackbar } = useSnackbar();
   
     const { mutate: signInMutation } = useMutation({
         mutationFn: () => AuthService.signin(username, password),
-        // onSuccess: () => { navigate('/sadsada') },
+        onSuccess: (data) => { 
+            // navigate('/sadsada')
+            const username = data?.data.user.username;
+            // обернуть в useEffect queryClient.get, чтобы получать состояние - вошел или не вошел пользователь в аккаунт
+            // можно ли таким образом отслеживать изменения при signin/signout/ истечение жизни токенов
+
+            queryClient.setQueryData([QUERY_KEY.user], username);
+         },
         onError: () => console.log('error in useSignIn query'),
         
     })

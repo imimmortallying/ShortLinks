@@ -1,17 +1,18 @@
 
 import cls from "./MainPage.module.scss";
 
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Button, Typography } from "antd";
 
 import { SendLinkBlock, selectAlias, selectUsername } from "widgets/SendLink";
 import { ModalWindow } from "widgets/ModalWindow";
-import { useAppDispatch } from "shared";
+import { QUERY_KEY, useAppDispatch } from "shared";
 
 import { selectAllUsersLinks } from "./models/allUsersLinksSlice";
 import { req_getAllUserslinks } from "./api/req_getAllUsersLinks";
 import { req_MainPagelogout } from "./api/req_MainPageLogout";
+import { useQueryClient } from "react-query";
 
 
 interface MainPageProps {
@@ -43,6 +44,17 @@ export const MainPage: FC<MainPageProps> = () => {
         setOpen(false);
     };
 
+    // query
+    const queryClient = useQueryClient()
+    const userData = queryClient.getQueryData([QUERY_KEY.user])
+
+    useEffect(() => {
+
+        // if (!user) userLocalStorage.removeUser();
+        // else userLocalStorage.saveUser(user);
+        console.log('USER:', userData)
+      }, [userData]);
+
     return (
         <div className={cls.MainPage}>
             <ModalWindow isOpened={isOpened} handleCloseModal={handleCloseModal}></ModalWindow>
@@ -55,7 +67,7 @@ export const MainPage: FC<MainPageProps> = () => {
                         Вход/регистрация
                     </Button>
 
-                    {authUsername
+                    {userData
                         ? <Button onClick={() => dispatchAsync(req_MainPagelogout())} block>Выйти</Button>
                         : ''
                     }
@@ -75,7 +87,7 @@ export const MainPage: FC<MainPageProps> = () => {
                     <Link className={cls.ResultLink} href={aliasRes}>{aliasRes}</Link>
                 </div>
 
-                {authUsername
+                {userData
                     ?
                     <div className={cls.AllLinksBlock}>
                         <div className={cls.allLinksHeader}>
