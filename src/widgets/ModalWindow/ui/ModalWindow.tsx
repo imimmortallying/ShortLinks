@@ -3,11 +3,8 @@ import { useState } from "react";
 import cls from "./ModalWindow.module.scss"
 import { Button, Input, Modal, Typography } from "antd";
 
-import { AuthService, useAppDispatch, $api, AuthResponse } from "shared";
+import { AuthService, useAppDispatch, useSignIn } from "shared";
 
-import { req_ModalLogin } from "../api/req_ModalLogin";
-import { useMutation, useQuery } from "react-query";
-import { useSignIn } from "shared/api/axios/axios.services.auth";
 
 
 interface ModalWindowProps {
@@ -33,7 +30,6 @@ export const ModalWindow = ({isOpened, handleCloseModal}:ModalWindowProps) => {
     // react query
     const signIn = useSignIn(username, password);
 
- 
 
     // console.log(data)
     // redux actions

@@ -2,25 +2,12 @@
 
 import axios, { AxiosResponse } from "axios";
 
-import { useMutation, useQueryClient } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useMutation } from "react-query";
+// import { useNavigate } from "react-router-dom";
 
 import { AuthResponse } from "shared";
 import { $api, API_URL } from "./axios.authApi";
 
-// export default class AuthService {
-//     static async login(username:string, password:string): Promise<AxiosResponse<AuthResponse>>{
-//         return $api.post<AuthResponse>('/login', {username, password})
-//     }
-
-//     static async registration(username:string, password:string): Promise<AxiosResponse<AuthResponse>>{
-//         return $api.post<AuthResponse>('/registration', {username, password})
-//     }
-
-//     static async logout(): Promise<void>{
-//         return $api.post('/logout')
-//     }
-// }
 interface linksResponse {
     links:string
 }
@@ -66,7 +53,7 @@ export const AuthService = {
 
     },
 
-    async checkAuth() {
+    async refresh() {
         try {
             const response = await axios.get<AuthResponse>(`${API_URL}/refresh`, {withCredentials:true});
             console.log(response);
@@ -79,15 +66,30 @@ export const AuthService = {
 
 
 
+
+export function useRefresh() {
+    
+    const { mutate: refreshMutation } = useMutation({
+        mutationFn: () => AuthService.refresh(),
+        // onSuccess: () => { navigate('/sadsada') },
+        onError: () => console.log('error in useSignIn query'),
+        mutationKey: ['user'],
+    })
+    
+    
+    return refreshMutation
+}
+
 export function useSignIn(username:string, password:string) {
-    const queryClient = useQueryClient();
+    // const queryClient = useQueryClient()
     // const navigate = useNavigate();
     // const { enqueueSnackbar } = useSnackbar();
   
     const { mutate: signInMutation } = useMutation({
         mutationFn: () => AuthService.signin(username, password),
         // onSuccess: () => { navigate('/sadsada') },
-        onError: () => console.log('error in useSignIn query')
+        onError: () => console.log('error in useSignIn query'),
+        
     })
       
   

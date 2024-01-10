@@ -1,4 +1,3 @@
-import { classNames } from "shared/lib/classNames/classNames";
 
 import cls from "./MainPage.module.scss";
 
@@ -8,11 +7,11 @@ import { Button, Typography } from "antd";
 
 import { SendLinkBlock, selectAlias, selectUsername } from "widgets/SendLink";
 import { ModalWindow } from "widgets/ModalWindow";
+import { useAppDispatch } from "shared";
 
 import { selectAllUsersLinks } from "./models/allUsersLinksSlice";
 import { req_getAllUserslinks } from "./api/req_getAllUsersLinks";
 import { req_MainPagelogout } from "./api/req_MainPageLogout";
-import { useAppDispatch } from "shared";
 
 
 interface MainPageProps {
@@ -20,7 +19,10 @@ interface MainPageProps {
     // children?: ReactNode;
 }
 
-export const MainPage: FC<MainPageProps> = ({ className }: MainPageProps) => {
+export const MainPage: FC<MainPageProps> = () => {
+
+
+
 
     const authUsername = useSelector(selectUsername);
     const aliasRes = useSelector(selectAlias);
@@ -42,7 +44,7 @@ export const MainPage: FC<MainPageProps> = ({ className }: MainPageProps) => {
     };
 
     return (
-        <div className={classNames(cls.MainPage, {}, [className])}>
+        <div className={cls.MainPage}>
             <ModalWindow isOpened={isOpened} handleCloseModal={handleCloseModal}></ModalWindow>
 
             <div className={cls.Header}>

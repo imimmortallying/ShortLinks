@@ -1,33 +1,29 @@
 
 import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { ReactQueryDevtools } from 'react-query/devtools'
 
-import { useAppDispatch } from "shared";
 import { MainPage, RedirectPage } from "Pages";
+import { useRefresh } from "shared";
 
-import { req_AppCheckAuth } from "./api/req_AppCheckAuth";
-import { QueryClient, QueryClientProvider } from "react-query";
 
 const App = () => {
-    const queryClient = new QueryClient();
-    const dispatchAsync = useAppDispatch();
 
-
-
+    const checkAuth = useRefresh();
     // проерка авторизации пользователя при загрузке страницы
-    useEffect(() => {
-        if (localStorage.getItem('accessToken')) {
-            // AuthService.checkAuth()
-            dispatchAsync(req_AppCheckAuth())
+    // как реакт понимает, что ф-я, начинающаяся на use - хук? что такое хук и для чего нужны правила для их использования
+    // почему, например, я не могу использовать хук внутри useEffect?
+useEffect(()=>{
+    if (localStorage.getItem('accessToken')) {
+        checkAuth();
+    }
+}, [])
+        
 
-        }
-    }, []);
 
 
 
     return (
-        <QueryClientProvider client={queryClient}>
+
             
             <BrowserRouter>
                 <Routes>
@@ -36,8 +32,7 @@ const App = () => {
                 </Routes>
             </BrowserRouter>
 
-            <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
+
 
 
     )
