@@ -1,6 +1,6 @@
 export { QUERY_KEY } from "./constants/constants"
 
-export { useSignIn, useRefresh } from "./api/axios/axios.services.auth"
+export { useSignIn, useRefresh, useSignout } from "./api/axios/axios.services.auth"
 
 export { AuthService } from "./api/axios/axios.services.auth"
 

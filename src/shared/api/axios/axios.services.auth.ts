@@ -37,7 +37,7 @@ export const AuthService = {
     async logout(): Promise<void> {
         try {
             localStorage.removeItem('accessToken');
-            return await $api.post('/logout');
+            return await $api.delete('/signout');
         } catch (e) {
             console.log(e)
         }
@@ -71,13 +71,30 @@ export function useRefresh() {
     
     const { mutate: refreshMutation } = useMutation({
         mutationFn: () => AuthService.refresh(),
-        // onSuccess: () => { navigate('/sadsada') },
-        onError: () => console.log('error in useSignIn query'),
-        mutationKey: ['user'],
+
+        onError: () => console.log('error in refresh query'),
+
     })
     
     
     return refreshMutation
+}
+
+export function useSignout() {
+    const queryClient = useQueryClient();
+    const { mutate: signoutMutation } = useMutation({
+        
+        mutationFn: () => AuthService.logout(),
+        onError: () => console.log('error in logout query'),
+        onSuccess: () => { 
+
+            queryClient.removeQueries();
+         },
+        // mutationKey: [QUERY_KEY.user],
+    })
+    
+    
+    return signoutMutation
 }
 
 interface signInResponse {
@@ -86,21 +103,17 @@ interface signInResponse {
 }
 
 export function useSignIn(username:string, password:string) {
-    const queryClient = useQueryClient()
-    // const navigate = useNavigate();
-    // const { enqueueSnackbar } = useSnackbar();
-  
+    const queryClient = useQueryClient();
     const { mutate: signInMutation } = useMutation({
         mutationFn: () => AuthService.signin(username, password),
         onSuccess: (data) => { 
-            // navigate('/sadsada')
+
             const username = data?.data.user.username;
-            // обернуть в useEffect queryClient.get, чтобы получать состояние - вошел или не вошел пользователь в аккаунт
-            // можно ли таким образом отслеживать изменения при signin/signout/ истечение жизни токенов
 
             queryClient.setQueryData([QUERY_KEY.user], username);
          },
         onError: () => console.log('error in useSignIn query'),
+        // mutationKey: [QUERY_KEY.user, username], // зачем они мне вообще?
         
     })
       

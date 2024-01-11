@@ -7,11 +7,10 @@ import { Button, Typography } from "antd";
 
 import { SendLinkBlock, selectAlias, selectUsername } from "widgets/SendLink";
 import { ModalWindow } from "widgets/ModalWindow";
-import { QUERY_KEY, useAppDispatch } from "shared";
+import { QUERY_KEY, useAppDispatch, useSignout } from "shared";
 
 import { selectAllUsersLinks } from "./models/allUsersLinksSlice";
 import { req_getAllUserslinks } from "./api/req_getAllUsersLinks";
-import { req_MainPagelogout } from "./api/req_MainPageLogout";
 import { useQueryClient } from "react-query";
 
 
@@ -24,6 +23,8 @@ export const MainPage: FC<MainPageProps> = () => {
 
 
 
+    // query hooks
+    const signout = useSignout();
 
     const authUsername = useSelector(selectUsername);
     const aliasRes = useSelector(selectAlias);
@@ -68,7 +69,7 @@ export const MainPage: FC<MainPageProps> = () => {
                     </Button>
 
                     {userData
-                        ? <Button onClick={() => dispatchAsync(req_MainPagelogout())} block>Выйти</Button>
+                        ? <Button onClick={() => signout()} block>Выйти</Button>
                         : ''
                     }
 
