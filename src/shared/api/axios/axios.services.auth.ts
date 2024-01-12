@@ -6,10 +6,15 @@ import { useMutation, useQueryClient } from "react-query";
 // import { useNavigate } from "react-router-dom";
 
 import { AuthResponse, QUERY_KEY } from "shared";
-import { $api, API_URL } from "./axios.authApi";
+import { $api, API_URL } from "./axios.auth.api";
 
 interface linksResponse {
     links:string
+}
+
+interface signInResponse {
+    accessToken: string,
+    user: {username:string}
 }
 
 export const AuthService = {
@@ -42,16 +47,6 @@ export const AuthService = {
             console.log(e)
         }
     },
-    
-    async loadLinks(): Promise<AxiosResponse<linksResponse>> {
-        try {
-            const response = await $api.get<linksResponse>('/links');
-            return response
-        } catch (e) {
-            console.log(e.response?.data)
-        }
-
-    },
 
     async refresh() {
         try {
@@ -66,57 +61,3 @@ export const AuthService = {
 
 
 
-
-export function useRefresh() {
-    
-    const { mutate: refreshMutation } = useMutation({
-        mutationFn: () => AuthService.refresh(),
-
-        onError: () => console.log('error in refresh query'),
-
-    })
-    
-    
-    return refreshMutation
-}
-
-export function useSignout() {
-    const queryClient = useQueryClient();
-    const { mutate: signoutMutation } = useMutation({
-        
-        mutationFn: () => AuthService.logout(),
-        onError: () => console.log('error in logout query'),
-        onSuccess: () => { 
-
-            queryClient.removeQueries();
-         },
-        // mutationKey: [QUERY_KEY.user],
-    })
-    
-    
-    return signoutMutation
-}
-
-interface signInResponse {
-    accessToken: string,
-    user: {username:string}
-}
-
-export function useSignIn(username:string, password:string) {
-    const queryClient = useQueryClient();
-    const { mutate: signInMutation } = useMutation({
-        mutationFn: () => AuthService.signin(username, password),
-        onSuccess: (data) => { 
-
-            const username = data?.data.user.username;
-
-            queryClient.setQueryData([QUERY_KEY.user], username);
-         },
-        onError: () => console.log('error in useSignIn query'),
-        // mutationKey: [QUERY_KEY.user, username], // зачем они мне вообще?
-        
-    })
-      
-  
-    return signInMutation
-  }

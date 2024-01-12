@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
-import { API_URL } from "../../../shared/api/axios/axios.authApi";
+import { API_URL } from "../../../shared/api/axios/axios.auth.api";
 import { req_setAlias } from "../models/resultAliasSlice";
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 

@@ -1,6 +1,8 @@
-export { QUERY_KEY } from "./constants/constants"
+export { useSendLink } from "./api/query/query.hooks"
 
-export { useSignIn, useRefresh, useSignout } from "./api/axios/axios.services.auth"
+export { useRefresh, useSignIn, useSignout } from "./api/query/query.hooks"
+
+export { QUERY_KEY } from "./constants/constants"
 
 export { AuthService } from "./api/axios/axios.services.auth"
 
@@ -12,7 +14,8 @@ export { linksService } from "./api/axios/axios.services.links"
 
 export {AuthResponse} from "./api/axios/axios.models"
 
-export {$api, API_URL} from "./api/axios/axios.authApi"
+export {$api, API_URL} from "./api/axios/axios.auth.api"
+
 
 
 

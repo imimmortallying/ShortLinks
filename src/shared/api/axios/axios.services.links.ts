@@ -1,4 +1,12 @@
 import axios from "axios";
+import { $api } from "./axios.auth.api";
+import { $linkApi } from "./axios.link.api";
+
+interface ISendLink {
+    link: string, 
+    status: 'anon' | 'signedin', 
+    user: string
+}
 
 export const linksService = {
     async findLinkByAlias(alias:string): Promise<{foundLink:string}> {
@@ -8,5 +16,19 @@ export const linksService = {
         } catch (e) {
             console.log(e.response?.data)
         }
-    }
+    },
+
+    // localStorage.setItem('accessToken', response.data.accessToken);
+
+    // async sendLink(link: string, status: 'anon' | 'signedin', user: string): Promise<{alias:string}> {
+    async sendLink(cmd:ISendLink): Promise<{alias:string}> {
+        try {
+
+            const response = await $linkApi.post('/sendLink', { user:cmd.user, link:cmd.link, status: cmd.status});
+            return response.data
+        } catch (e) {
+            console.log(e.response?.data)
+        }
+
+    },
 }

@@ -19,14 +19,13 @@ interface MainPageProps {
     // children?: ReactNode;
 }
 
-export const MainPage: FC<MainPageProps> = () => {
 
+export const MainPage: FC<MainPageProps> = () => {
 
 
     // query hooks
     const signout = useSignout();
 
-    const authUsername = useSelector(selectUsername);
     const aliasRes = useSelector(selectAlias);
     const allUsersLinks = useSelector(selectAllUsersLinks);
 
@@ -47,13 +46,16 @@ export const MainPage: FC<MainPageProps> = () => {
 
     // query
     const queryClient = useQueryClient()
-    const userData = queryClient.getQueryData([QUERY_KEY.user])
+    const userData = queryClient.getQueryData([QUERY_KEY.user]);
+    const userStatus = queryClient.getQueryData([QUERY_KEY.status]);
+    const newAlias = queryClient.getQueryData([QUERY_KEY.alias])
 
     useEffect(() => {
 
         // if (!user) userLocalStorage.removeUser();
         // else userLocalStorage.saveUser(user);
         console.log('USER:', userData)
+        console.log('STATUS:', userStatus)
       }, [userData]);
 
     return (

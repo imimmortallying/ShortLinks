@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { useSelector } from "react-redux";
 
-import { useAppDispatch } from "shared";
+import { useAppDispatch, useSendLink } from "shared";
 
 import { selectUsername } from "../models/authSlice";
 import { req_SendAuthLink } from "../api/req_sendAuthLink";
@@ -25,10 +25,14 @@ export const SendLinkBlock = ({ className }: SendLinkBlockProps) => {
 
     const dispatchAsync = useAppDispatch();
 
+    
     const [link, setLink] = useState('');
     const onLinkChange = (e: any) => {
         setLink(e.target.value)
     }
+
+    //query
+    const sendLink = useSendLink(link);
 
     const authUsername = useSelector(selectUsername);
 
@@ -40,9 +44,10 @@ export const SendLinkBlock = ({ className }: SendLinkBlockProps) => {
 
             <Button onClick={
                 // авторизован? соответствующие request
-                authUsername 
-                    ? () => dispatchAsync(req_SendAuthLink({link:link}))
-                    : () => dispatchAsync(req_SendAnonLink({link:link}))
+                // authUsername 
+                //     ? () => dispatchAsync(req_SendAuthLink({link:link}))
+                //     : () => dispatchAsync(req_SendAnonLink({link:link}))
+                ()=> sendLink()
             }
             >
                 Сократить
