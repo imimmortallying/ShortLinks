@@ -31,4 +31,14 @@ export const linksService = {
         }
 
     },
+
+    async getAllLinks(): Promise<string[]> {
+        try {
+            const response = await $linkApi.post('/allUsersLinks', {status: 'signedin'});
+            return response.data.links
+        } catch (e) {
+            console.log(e.response?.data)
+        }
+
+    },
 }

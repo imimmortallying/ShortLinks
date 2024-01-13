@@ -1,6 +1,6 @@
 export { useSendLink } from "./api/query/query.hooks"
 
-export { useRefresh, useSignIn, useSignout } from "./api/query/query.hooks"
+export { useRefresh, useSignIn, useSignout, useGetAllLinks, useLoadAllLinksQuery } from "./api/query/query.hooks"
 
 export { QUERY_KEY } from "./constants/constants"
 

@@ -1,6 +1,6 @@
 
 
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { AuthService } from "../axios/axios.services.auth";
 import { QUERY_KEY} from "shared";
 import { linksService } from "../axios/axios.services.links"
@@ -13,18 +13,14 @@ export function useSendLink(link:string) {
     // я же говорю TS, что значения обязательно будут строками. Как правильно обработать эту ситуацию?
     const user = queryClient.getQueryData([QUERY_KEY.user]) as string
     const status = queryClient.getQueryData([QUERY_KEY.status]) as "anon" | "signedin"
-    
-    // в чем разница между мутацией и не мутацией?
-    // если я хочу просто получить ссылку в ответ и никак не воздействовать на query State, то нужна ли мне мутация
-    // а если я все равно ее использую, то что?
 
-    // все-таки сейчас это мутация т.к. я сохраняю полученную ссылку, чтобы вывести в компоненте
     const { mutate: sendLinkMutation } = useMutation({
         mutationFn: () => linksService.sendLink({user:user, link:link, status:status}),
         onSuccess: (data) => {
 
             const alias = data?.alias;
-            queryClient.setQueryData([QUERY_KEY.alias], alias)
+            queryClient.setQueryData([QUERY_KEY.alias], alias);
+            queryClient.invalidateQueries({queryKey:[QUERY_KEY.links]});
         },
         onError: () => console.log('error in refresh query'),
 
@@ -34,9 +30,42 @@ export function useSendLink(link:string) {
     return sendLinkMutation
 }
 
+export const useLoadAllLinksQuery = () => {
+
+    return useQuery({
+        queryFn: () => linksService.getAllLinks(),
+        queryKey: [QUERY_KEY.links],
+        enabled: false
+    })
+}
+
+
+
+export function useGetAllLinks() {
+    const queryClient = useQueryClient();
+
+    const user = queryClient.getQueryData([QUERY_KEY.user]) as string
+    const status = queryClient.getQueryData([QUERY_KEY.status]) as "anon" | "signedin"
+
+    // все-таки сейчас это мутация т.к. я сохраняю полученную ссылку, чтобы вывести в компоненте
+    const { mutate: sendLinkMutation } = useMutation({
+        mutationFn: () => linksService.getAllLinks(),
+        onSuccess: (data) => {
+
+            const links = data;
+            queryClient.setQueryData([QUERY_KEY.links], links)
+        },
+        onError: () => console.log('error in allLinks query'),
+
+    })
+    
+    
+    return sendLinkMutation
+}
+
 export function useRefresh() {
     const queryClient = useQueryClient();
-    
+
     const { mutate: refreshMutation } = useMutation({
         mutationFn: () => AuthService.refresh(),
         onSuccess: (data) => { 
@@ -81,8 +110,8 @@ export function useSignIn(username:string, password:string) {
     const queryClient = useQueryClient();
     const { mutate: signInMutation } = useMutation({
         mutationFn: () => AuthService.signin(username, password),
-        onSuccess: (data) => { 
 
+        onSuccess: (data) => { 
             const username = data?.data.user.username;
             queryClient.setQueryData([QUERY_KEY.user], username);
 
@@ -92,12 +121,11 @@ export function useSignIn(username:string, password:string) {
             }
             queryClient.setQueryData([QUERY_KEY.status], 'signedin');
          },
+
         onError: () => {
             queryClient.setQueryData([QUERY_KEY.status], 'anon');
             console.log('error in useSignIn query');
         },
-        // mutationKey: [QUERY_KEY.user, username], // зачем они мне вообще?
-        
     })
       
   

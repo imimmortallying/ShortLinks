@@ -7,11 +7,12 @@ import { Button, Typography } from "antd";
 
 import { SendLinkBlock, selectAlias, selectUsername } from "widgets/SendLink";
 import { ModalWindow } from "widgets/ModalWindow";
-import { QUERY_KEY, useAppDispatch, useSignout } from "shared";
+import { QUERY_KEY, linksService, useLoadAllLinksQuery, useAppDispatch, useSignout } from "shared";
 
 import { selectAllUsersLinks } from "./models/allUsersLinksSlice";
 import { req_getAllUserslinks } from "./api/req_getAllUsersLinks";
-import { useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
+import { useFingerprint } from "shared/lib/fingerprint/fingerprint";
 
 
 interface MainPageProps {
@@ -23,15 +24,7 @@ interface MainPageProps {
 export const MainPage: FC<MainPageProps> = () => {
 
 
-    // query hooks
-    const signout = useSignout();
 
-    const aliasRes = useSelector(selectAlias);
-    const allUsersLinks = useSelector(selectAllUsersLinks);
-
-    const dispatchAsync = useAppDispatch();
-
-    const { Text, Link } = Typography;
 
     //modal state and handlers
     const [isOpened, setOpen] = useState(false);
@@ -44,19 +37,28 @@ export const MainPage: FC<MainPageProps> = () => {
         setOpen(false);
     };
 
+    //!finger
+    const fingerprint = useFingerprint();
+    Promise.resolve(fingerprint()).then(val=>console.log(val))
+
     // query
+    
+    const signout = useSignout();
+
+    const aliasRes = useSelector(selectAlias);
+    const allUsersLinks = useSelector(selectAllUsersLinks);
+
+    const { Text, Link } = Typography;
+    const { data, isSuccess, refetch: loadAllLinks } = useLoadAllLinksQuery();
+
     const queryClient = useQueryClient()
     const userData = queryClient.getQueryData([QUERY_KEY.user]);
     const userStatus = queryClient.getQueryData([QUERY_KEY.status]);
-    const newAlias = queryClient.getQueryData([QUERY_KEY.alias])
+    const newAlias = queryClient.getQueryData([QUERY_KEY.alias]) as string;
 
     useEffect(() => {
 
-        // if (!user) userLocalStorage.removeUser();
-        // else userLocalStorage.saveUser(user);
-        console.log('USER:', userData)
-        console.log('STATUS:', userStatus)
-      }, [userData]);
+    }, [newAlias]);
 
     return (
         <div className={cls.MainPage}>
@@ -87,20 +89,21 @@ export const MainPage: FC<MainPageProps> = () => {
 
                 <div className={cls.ResultBlock}>
                     <Text className={cls.ResultText}>Результат:</Text>
-                    <Link className={cls.ResultLink} href={aliasRes}>{aliasRes}</Link>
+                    <Link className={cls.ResultLink} href={aliasRes}>{newAlias}</Link>
                 </div>
 
                 {userData
                     ?
                     <div className={cls.AllLinksBlock}>
                         <div className={cls.allLinksHeader}>
-                            <Button onClick={() => dispatchAsync(req_getAllUserslinks())} >Все мои ссылки</Button>
+                            <Button onClick={() => loadAllLinks()} >Все мои ссылки</Button>
                         </div>
                         <div className={cls.linksContainer}>
-                            {allUsersLinks.map((link) => {
+                            {isSuccess && data.map((link) => {
                                 return <Link
-                                    href={'http://localhost:4000/' + link.alias}
-                                    className={cls.linkItem}>{'http://localhost:4000/' + link.alias}
+                                    key={link}
+                                    href={'http://localhost:4000/' + link}
+                                    className={cls.linkItem}>{'http://localhost:4000/' + link}
                                 </Link>
                             })}
                         </div>
