@@ -19,7 +19,6 @@ export const RedirectPage = ({ className }: RedirectPageProps) => {
         linksService.findLinkByAlias(linkAlias)
             .then((link)=>link.foundLink)
             .then((originalLink)=>window.location.replace(originalLink));
-        ;
     }, [])
 
 

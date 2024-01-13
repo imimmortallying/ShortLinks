@@ -1,17 +1,17 @@
-import FingerprintJS from '@fingerprintjs/fingerprintjs';
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
+import { useEffect, useState } from "react";
 
 const fpPromise = FingerprintJS.load();
 
-
 export function useFingerprint() {
+  const [visitorId, setVisitorId] = useState(null);
 
-    return async () => {
-        // Get the visitor identifier when you need it.
-        const fp = await fpPromise;
-        const result = await fp.get();
-        // console.log(result.visitorId)
-        return result.visitorId
-    }
+  useEffect(() => {
+    fpPromise
+      .then((fp) => fp.get())
+      .then(({ visitorId }) => setVisitorId(visitorId));
+  }, []);
 
+  return visitorId;
+  
 }
-

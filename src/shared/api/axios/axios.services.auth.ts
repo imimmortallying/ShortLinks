@@ -12,9 +12,9 @@ interface linksResponse {
     links:string
 }
 
-interface signInResponse {
+export interface signInResponse {
     accessToken: string,
-    user: {username:string}
+    user: {username:string, alias?: string}
 }
 
 export const AuthService = {
