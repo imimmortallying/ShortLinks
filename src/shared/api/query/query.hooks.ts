@@ -35,10 +35,21 @@ export function useSendLink(link:string) {
 }
 
 export function useRefresh() {
+    const queryClient = useQueryClient();
     
     const { mutate: refreshMutation } = useMutation({
         mutationFn: () => AuthService.refresh(),
+        onSuccess: (data) => { 
 
+            const username = data?.data.user.username;
+            queryClient.setQueryData([QUERY_KEY.user], username);
+
+            // мб можно связать status и username через useEffect? там же, где буду делать первоначальный запрос при загрузке приложения
+            if (data.data.user === undefined) {
+                queryClient.setQueryData([QUERY_KEY.status], 'anon');
+            }
+            queryClient.setQueryData([QUERY_KEY.status], 'signedin');
+         },
         onError: () => console.log('error in refresh query'),
 
     })
@@ -73,11 +84,18 @@ export function useSignIn(username:string, password:string) {
         onSuccess: (data) => { 
 
             const username = data?.data.user.username;
-
             queryClient.setQueryData([QUERY_KEY.user], username);
+
+            // мб можно связать status и username через useEffect? там же, где буду делать первоначальный запрос при загрузке приложения
+            if (data.data.user === undefined) {
+                queryClient.setQueryData([QUERY_KEY.status], 'anon');
+            }
             queryClient.setQueryData([QUERY_KEY.status], 'signedin');
          },
-        onError: () => console.log('error in useSignIn query'),
+        onError: () => {
+            queryClient.setQueryData([QUERY_KEY.status], 'anon');
+            console.log('error in useSignIn query');
+        },
         // mutationKey: [QUERY_KEY.user, username], // зачем они мне вообще?
         
     })

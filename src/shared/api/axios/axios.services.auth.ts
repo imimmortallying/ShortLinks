@@ -48,11 +48,12 @@ export const AuthService = {
         }
     },
 
-    async refresh() {
+    async refresh(): Promise<AxiosResponse<signInResponse>>  {
         try {
-            const response = await axios.get<AuthResponse>(`${API_URL}/refresh`, {withCredentials:true});
+            const response = await axios.get<signInResponse>(`${API_URL}/refresh`, {withCredentials:true});
             console.log(response);
             localStorage.setItem('accessToken', response.data.accessToken);
+            return response;
         } catch (e) {
             console.log(e.response?.data)
         }
