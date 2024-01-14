@@ -14,7 +14,7 @@ interface linksResponse {
 
 export interface signInResponse {
     accessToken: string,
-    user: {username:string, alias?: string, links?:string[]},
+    user: {username:string, alias?: string, links?:string[] | []},
 }
 
 export const AuthService = {

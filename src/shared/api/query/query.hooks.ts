@@ -48,7 +48,6 @@ export function useSignInQuery(username: string, password: string) {
     select: ({ data }) => ({
       username: data?.user.username,
       alias: data?.user.alias,
-      links: data?.user.links,
       userType:
         data?.user === undefined ? ("anon" as const) : ("signedin" as const),
     }), //todo лучше вынести в отдельную ф-ю
@@ -93,12 +92,9 @@ export function useSendLink(link: string) {
         [QUERY_KEY.user],
         (prev) => {
           // console.log("PREV", prev);
-
           const updatedUser = {
             ...prev.data.user,
             alias,
-            links: [...prev.data.user.links, alias] // как правильно обновить локальный стейт ссылок при отправке новой ссылки?
-            // добавить вручную, но нужно разобраться с TS. Либо через invalidateQueries, но как?
           }
 
           return {
@@ -107,39 +103,39 @@ export function useSendLink(link: string) {
           };
         }
       );
-      queryClient.invalidateQueries([QUERY_KEY.user]); // если я создаю отдельный стейт по другому ключу, то работало. Но как обновить стейт
-      // который находится внутри более комплексной сущности user: {username, alias, links}
-
-      // складывается ощущение, что стейт должен быть продуман заранее и вынесен в TS модели
+      queryClient.invalidateQueries([QUERY_KEY.links]);
     },
-    onError: () => console.log("error in refresh query"),
+    onError: () => console.log("error in send link"),
   });
 
   return sendLinkMutation;
 }
 
 
-export function useGetAllLinksMutation() {
+export function useGetAllLinksQuery() {
   const queryClient = useQueryClient();
 
   // все-таки сейчас это мутация т.к. я сохраняю полученную ссылку, чтобы вывести в компоненте
-  const  getAllLinksMutation = useMutation({
-    mutationFn: () => linksService.getAllLinks(),
-    onSuccess: (data) => {
-      const links = data;
-      queryClient.setQueryData<UseSignInQueryCacheData>(
-        [QUERY_KEY.user],
-        (prev) => {
-          // console.log("PREV", prev);
-          return {
-            ...prev,
-            data: { ...prev.data, user: { ...prev.data.user, links } },
-          };
-        }
-      );
-    },
-    onError: () => console.log("error in allLinks query"),
+  const  getAllLinksQuery = useQuery({
+    queryFn: () => linksService.getAllLinks(),
+    
+    queryKey: [QUERY_KEY.links],
+
+    // onSuccess: (data) => {
+    //   const links = data;
+    //   queryClient.setQueryData<UseSignInQueryCacheData>(
+    //     [QUERY_KEY.user],
+    //     (prev) => {
+    //       // console.log("PREV", prev);
+    //       return {
+    //         ...prev,
+    //         data: { ...prev.data, user: { ...prev.data.user, links } },
+    //       };
+    //     }
+    //   );
+    // },
+    // onError: () => console.log("error in allLinks query"),
   });
 
-  return getAllLinksMutation;
+  return getAllLinksQuery;
 }

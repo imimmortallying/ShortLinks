@@ -6,12 +6,13 @@ import { Button, Typography } from "antd";
 
 import { SendLinkBlock, selectAlias } from "widgets/SendLink";
 import { ModalWindow } from "widgets/ModalWindow";
-import { useSignout, useSignInQuery, useGetAllLinksMutation } from "shared";
+import { useSignout, useSignInQuery, useGetAllLinksQuery } from "shared";
 
 import { selectAllUsersLinks } from "./models/allUsersLinksSlice";
 import { useFingerprint } from "shared/lib/fingerprint/fingerprint";
 import { MainPageProvider } from "./MainPage.context";
 import { useUserFormState } from "./hooks/useUserFormState";
+import { AllLinksList } from "Features/AllLinksList/ui/allLinksList";
 
 interface MainPageProps {
   className?: string;
@@ -30,17 +31,20 @@ export const MainPage: FC<MainPageProps> = () => {
     setOpen(false);
   };
 
+  const [isVisible, setVisible] = useState(false);
+  const showAllLinks = () => {
+    setVisible(true);
+  };
+
   //!finger
   const fingerprint = useFingerprint();
   console.log(fingerprint);
-  
+
   const { Text, Link } = Typography;
 
   // query
 
   const signout = useSignout();
-
-  const loadAllLinksMutation = useGetAllLinksMutation();
 
   const userFormState = useUserFormState();
 
@@ -76,35 +80,24 @@ export const MainPage: FC<MainPageProps> = () => {
 
           <div className={cls.ResultBlock}>
             <Text className={cls.ResultText}>Результат:</Text>
-            {signIn.data?.alias === undefined
-              ? ''
-              : <Link className={cls.ResultLink} href={"http://localhost:4000/" + signIn.data?.alias}>
-              { "http://localhost:4000/" + signIn.data?.alias}
-            </Link>
-              
-            }
-            
+            {signIn.data?.alias === undefined ? (
+              ""
+            ) : (
+              <Link
+                className={cls.ResultLink}
+                href={"http://localhost:4000/" + signIn.data?.alias}
+              >
+                {"http://localhost:4000/" + signIn.data?.alias}
+              </Link>
+            )}
           </div>
 
           {signIn.status === "success" ? (
             <div className={cls.AllLinksBlock}>
               <div className={cls.allLinksHeader}>
-                <Button onClick={() => loadAllLinksMutation.mutate()}>Все мои ссылки</Button>
+                <Button onClick={showAllLinks}>Все мои ссылки</Button>
               </div>
-              <div className={cls.linksContainer}>
-                {loadAllLinksMutation.isSuccess &&
-                  signIn.data?.links.map((link) => {
-                    return (
-                      <Link
-                        key={link}
-                        href={"http://localhost:4000/" + link}
-                        className={cls.linkItem}
-                      >
-                        {"http://localhost:4000/" + link}
-                      </Link>
-                    );
-                  })}
-              </div>
+              {isVisible && <AllLinksList />}
             </div>
           ) : (
             ""
