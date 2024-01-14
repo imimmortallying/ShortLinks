@@ -2,7 +2,7 @@ export { createContextWithDefaultValue } from "./lib/createContext/createContext
 
 export { useSendLink } from "./api/query/query.hooks"
 
-export { useRefresh, useSignInQuery, useSignout, useGetAllLinks, useLoadAllLinksQuery } from "./api/query/query.hooks"
+export { useRefresh, useSignInQuery, useSignout, useGetAllLinksMutation, useLoadAllLinksQuery, } from "./api/query/query.hooks"
 
 export { QUERY_KEY } from "./constants/constants"
 

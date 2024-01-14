@@ -14,7 +14,7 @@ const App = () => {
     // почему, например, я не могу использовать хук внутри useEffect?
 useEffect(()=>{
     if (localStorage.getItem('accessToken')) {
-        checkAuth();
+        checkAuth.refetch();
     }
 }, [])
         

@@ -28,6 +28,17 @@ export const AuthService = {
         }
 
     },
+    
+    async refresh(): Promise<AxiosResponse<signInResponse>>  {
+        try {
+            const response = await axios.get<signInResponse>(`${API_URL}/refresh`, {withCredentials:true});
+            console.log(response);
+            localStorage.setItem('accessToken', response.data.accessToken);
+            return response;
+        } catch (e) {
+            console.log(e.response?.data)
+        }
+    },
 
     // нет необходимости использовать $api т.к. при регистрации я не использую токен
     // поэтому перехватчик не нужен
@@ -48,16 +59,7 @@ export const AuthService = {
         }
     },
 
-    async refresh(): Promise<AxiosResponse<signInResponse>>  {
-        try {
-            const response = await axios.get<signInResponse>(`${API_URL}/refresh`, {withCredentials:true});
-            console.log(response);
-            localStorage.setItem('accessToken', response.data.accessToken);
-            return response;
-        } catch (e) {
-            console.log(e.response?.data)
-        }
-    }
+
 }
 
 

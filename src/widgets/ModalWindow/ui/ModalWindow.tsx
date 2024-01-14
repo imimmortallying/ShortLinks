@@ -20,11 +20,10 @@ export const ModalWindow = ({
   handleCloseModal,
   userFormState,
 }: ModalWindowProps) => {
-  const ctx = useMainPageContext();
-  // дефолтная настройка из antd
 
+  const ctx = useMainPageContext();
+  
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [modalText, setModalText] = useState("Content of the modal");
 
   return (
     <Modal
@@ -58,15 +57,14 @@ export const ModalWindow = ({
       </div>
 
       <div className={cls.buttonsBlock}>
-        {/* <Button onClick={() => dispatchAsync(req_ModalLogin({username, password}))}>Логин</Button> */}
-        {/* <Button onClick={() => AuthService.signin(username, password)}>Логин</Button> */}
+
         <Button
           onClick={() => ctx.user.setEnabled(true)}
           loading={ctx.user.isLoading}
         >
           Логин
         </Button>
-        {/* регистрация не взаимодействует с redux, поэтому без обертки action */}
+
         <Button
           onClick={() =>
             AuthService.registration(
