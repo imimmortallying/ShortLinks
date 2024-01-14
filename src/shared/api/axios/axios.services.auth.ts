@@ -14,7 +14,7 @@ interface linksResponse {
 
 export interface signInResponse {
     accessToken: string,
-    user: {username:string, alias?: string}
+    user: {username:string, alias?: string, links?:string[]},
 }
 
 export const AuthService = {
@@ -28,7 +28,7 @@ export const AuthService = {
         }
 
     },
-    
+
     async refresh(): Promise<AxiosResponse<signInResponse>>  {
         try {
             const response = await axios.get<signInResponse>(`${API_URL}/refresh`, {withCredentials:true});

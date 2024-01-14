@@ -22,7 +22,7 @@ export const ModalWindow = ({
 }: ModalWindowProps) => {
 
   const ctx = useMainPageContext();
-  
+
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   return (
@@ -60,6 +60,7 @@ export const ModalWindow = ({
 
         <Button
           onClick={() => ctx.user.setEnabled(true)}
+          // onClick={() => console.log('ctx',ctx)}
           loading={ctx.user.isLoading}
         >
           Логин
