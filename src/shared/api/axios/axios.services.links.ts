@@ -8,6 +8,11 @@ interface ISendLink {
     user: string
 }
 
+interface IGetNewestLink {
+    status: 'anon' | 'signedin', 
+    user: string
+}
+
 export const linksService = {
     async findLinkByAlias(alias:string): Promise<{foundLink:string}> {
         try {
@@ -30,6 +35,16 @@ export const linksService = {
             console.log(e.response?.data)
         }
 
+    },
+
+    
+    async getNewestLink(cmd:IGetNewestLink): Promise<{alias:string}>{
+        try{
+            const response = await $linkApi.post('/findNewestLink', {user:cmd.user, status: cmd.status});
+            return response.data
+        } catch (e) {
+
+        }
     },
 
     async getAllLinks(): Promise<string[]> {

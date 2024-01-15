@@ -1,18 +1,16 @@
 import cls from "./MainPage.module.scss";
 
 import { FC, useState } from "react";
-import { useSelector } from "react-redux";
 import { Button, Typography } from "antd";
 
-import { SendLinkBlock, selectAlias } from "widgets/SendLink";
+import { SendLinkBlock } from "widgets/SendLink";
 import { ModalWindow } from "widgets/ModalWindow";
-import { useSignout, useSignInQuery, useGetAllLinksQuery } from "shared";
+import { useSignout, useSignInQuery, useGetAllLinksQuery, useGetNewestLinkQuery } from "shared";
 
-import { selectAllUsersLinks } from "./models/allUsersLinksSlice";
 import { useFingerprint } from "shared/lib/fingerprint/fingerprint";
 import { MainPageProvider } from "./MainPage.context";
 import { useUserFormState } from "./hooks/useUserFormState";
-import { AllLinksList } from "Features/AllLinksList/ui/allLinksList";
+import { AllLinksList } from "Features/AllLinksList/ui/AllLinksList";
 
 interface MainPageProps {
   className?: string;
@@ -45,10 +43,14 @@ export const MainPage: FC<MainPageProps> = () => {
   // query
 
   const signout = useSignout();
-
+  // const sendLink = useSendLink(link);
   const userFormState = useUserFormState();
 
   const signIn = useSignInQuery(userFormState.username, userFormState.password);
+
+  const getNewestLink = useGetNewestLinkQuery();
+
+  const loadAllLinksQuery = useGetAllLinksQuery()
 
   return (
     <MainPageProvider value={{ user: signIn }}>
@@ -80,7 +82,21 @@ export const MainPage: FC<MainPageProps> = () => {
 
           <div className={cls.ResultBlock}>
             <Text className={cls.ResultText}>Результат:</Text>
-            {signIn.data?.alias === undefined ? (
+            {getNewestLink.data === undefined ? ( //!
+              ""
+            ) : (
+              <Link
+                className={cls.ResultLink}
+                href={"http://localhost:4000/" + getNewestLink.data?.alias}
+              >
+                {"http://localhost:4000/" + getNewestLink.data?.alias}
+              </Link>
+            )}
+          </div>
+{/* 
+          <div className={cls.ResultBlock}>
+            <Text className={cls.ResultText}>Результат:</Text>
+            {signIn.data?.alias === undefined ? ( //!
               ""
             ) : (
               <Link
@@ -90,7 +106,7 @@ export const MainPage: FC<MainPageProps> = () => {
                 {"http://localhost:4000/" + signIn.data?.alias}
               </Link>
             )}
-          </div>
+          </div> */}
 
           {signIn.status === "success" ? (
             <div className={cls.AllLinksBlock}>

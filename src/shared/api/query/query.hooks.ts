@@ -86,25 +86,7 @@ export function useSendLink(link: string) {
         link: link,
         status: ctx.user.data.userType,
       }),
-    onSuccess: (data) => {
-      const alias = data?.alias;
-      queryClient.setQueryData<UseSignInQueryCacheData>(
-        [QUERY_KEY.user],
-        (prev) => {
-          // console.log("PREV", prev);
-          const updatedUser = {
-            ...prev.data.user,
-            alias,
-          }
-
-          return {
-            ...prev,
-            data: { ...prev.data, user: updatedUser },
-          };
-        }
-      );
-      queryClient.invalidateQueries([QUERY_KEY.links]);
-    },
+      
     onError: () => console.log("error in send link"),
   });
 
@@ -112,29 +94,42 @@ export function useSendLink(link: string) {
 }
 
 
+export function useGetNewestLinkQuery() {
+  const queryClient = useQueryClient();
+  const ctx = useMainPageContext();
+  const [enabled, setEnabled] = useState(false);
+
+  const enableQuery = () => {
+    setEnabled(true);
+  };
+
+  const disableQuery = () => {
+    setEnabled(false);
+  };
+
+  const  getNewestLinkQuery = useQuery({
+    queryKey: [QUERY_KEY.alias],
+    enabled, 
+    queryFn: () => linksService.getNewestLink({  
+      user: ctx.user.data.username,
+      status: ctx.user.data.userType,
+    }),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries([QUERY_KEY.links])
+    },
+    
+  });
+  return { ...getNewestLinkQuery, enableQuery, disableQuery };
+}
+
 export function useGetAllLinksQuery() {
   const queryClient = useQueryClient();
 
-  // все-таки сейчас это мутация т.к. я сохраняю полученную ссылку, чтобы вывести в компоненте
   const  getAllLinksQuery = useQuery({
     queryFn: () => linksService.getAllLinks(),
     
     queryKey: [QUERY_KEY.links],
-
-    // onSuccess: (data) => {
-    //   const links = data;
-    //   queryClient.setQueryData<UseSignInQueryCacheData>(
-    //     [QUERY_KEY.user],
-    //     (prev) => {
-    //       // console.log("PREV", prev);
-    //       return {
-    //         ...prev,
-    //         data: { ...prev.data, user: { ...prev.data.user, links } },
-    //       };
-    //     }
-    //   );
-    // },
-    // onError: () => console.log("error in allLinks query"),
   });
 
   return getAllLinksQuery;
