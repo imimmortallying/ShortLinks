@@ -6,8 +6,6 @@ import { useState } from "react";
 import { useMainPageContext } from "Pages/MainPage/MainPage.context";
 import { AxiosResponse } from "axios";
 
-
-
 export const useLoadAllLinksQuery = () => {
   return useQuery({
     queryFn: () => linksService.getAllLinks(),
@@ -15,9 +13,6 @@ export const useLoadAllLinksQuery = () => {
     enabled: false,
   });
 };
-
-
-
 
 export function useSignout() {
   const queryClient = useQueryClient();
@@ -34,10 +29,10 @@ export function useSignout() {
 }
 
 export type UseSignInQuerySelectData = ReturnType<typeof useSignInQuery>;
+export type UseRefreshData = ReturnType<typeof useRefresh>;
 export type UseSignInQueryCacheData = AxiosResponse<signInResponse>;
 
 export function useSignInQuery(username: string, password: string) {
-
   const [enabled, setEnabled] = useState(false);
 
   const signInQuery = useQuery({
@@ -46,10 +41,9 @@ export function useSignInQuery(username: string, password: string) {
     staleTime: Infinity,
     queryFn: () => AuthService.signin(username, password),
     select: ({ data }) => ({
-      username: data?.user.username,
-      alias: data?.user.alias,
-      userType:
-        data?.user === undefined ? ("anon" as const) : ("signedin" as const),
+      username: data === undefined ? "UNDEFINED" : data.user.username,
+      // alias: data?.user.alias,
+      userType: data === undefined ? ("anon" as const) : ("signedin" as const),
     }), //todo лучше вынести в отдельную ф-ю
   });
 
@@ -57,46 +51,108 @@ export function useSignInQuery(username: string, password: string) {
 }
 
 export function useRefresh() {
+  const [enabled, setEnabled] = useState(false);
 
+  const enableQuery = () => {
+    setEnabled(true);
+  };
   const refreshQuery = useQuery({
     queryKey: [QUERY_KEY.user],
-    enabled: false,
+    enabled,
     staleTime: Infinity,
     queryFn: () => AuthService.refresh(),
-    select: ({ data }) => ({
-      username: data?.user.username,
-      alias: data?.user.alias,
-      userType:
-        data?.user === undefined ? ("anon" as const) : ("signedin" as const),
-    }), //todo лучше вынести в отдельную ф-ю
-  });
+    onSettled: (data, error) => {
+      if (error) {
+        console.error('Error refreshing data:', error);
+      } else {
+        console.log('DATA', data);
+      }
+    },
+    // select: ({ data }) => {
+    //   const obj = {
+    //     // username: data?.user.username,
+    //     username: data === undefined ? "anon322" : data.user.username,
+    //     // alias: data?.user.alias,
+    //     userType:
+    //       data === undefined ? ("anon" as const) : ("signedin" as const),
+    //   };
+    //   console.log("data", data);
 
-  return refreshQuery;
+    //   return obj;
+    // },
+    // onSuccess: (data) => {
+    //   console.log('DATA', data)
+    // },
+
+  });
+  // const refreshQuery = useQuery({
+  //   queryKey: [QUERY_KEY.user],
+  //   enabled,
+  //   staleTime: Infinity,
+  //   queryFn: () => AuthService.refresh(),
+  //   select: ({ data }) => ({
+  //     // username: data?.user.username,
+  //     username:
+  //       data === undefined ? 'anon322' : data.user.username,
+  //     // alias: data?.user.alias,
+  //     userType:
+  //       data?.user === undefined ? ("anon" as const) : ("signedin" as const),
+  //   }), //todo лучше вынести в отдельную ф-ю
+  // });
+  return { ...refreshQuery, enableQuery };
 }
 
+// export function useRefresh() {
+
+//   const refreshQuery = useQuery({
+//     queryKey: [QUERY_KEY.user],
+//     enabled: false,
+//     staleTime: Infinity,
+//     queryFn: () => AuthService.refresh(),
+//     onSuccess: (data) => {
+//       console.log('data', data)
+//     },
+//     onSettled: ()=> {
+//       console.log('SETTLED')
+//     },
+//     select: ({ data }) => ({
+
+//     }),
+
+//   });
+
+//   return refreshQuery;
+// }
+
 // передать юзера из модалки передать через контекст
-export function useSendLink(link: string) {
+export function useSendLink(
+  link: string,
+  user: string,
+  status: "anon" | "signedin"
+) {
   const queryClient = useQueryClient();
 
-  const ctx = useMainPageContext();
   const sendLinkMutation = useMutation({
     mutationFn: () =>
       linksService.sendLink({
-        user: ctx.user.data.username,
+        // user: ctx.user.data.username,
+        user: user,
         link: link,
-        status: ctx.user.data.userType,
+        // status: ctx.user.data.userType,
+        status: status,
       }),
-      
+
     onError: () => console.log("error in send link"),
   });
 
   return sendLinkMutation;
 }
 
-
-export function useGetNewestLinkQuery() {
+export function useGetNewestLinkQuery(
+  user: string,
+  status: "anon" | "signedin"
+) {
   const queryClient = useQueryClient();
-  const ctx = useMainPageContext();
   const [enabled, setEnabled] = useState(false);
 
   const enableQuery = () => {
@@ -107,30 +163,34 @@ export function useGetNewestLinkQuery() {
     setEnabled(false);
   };
 
-  const  getNewestLinkQuery = useQuery({
+  const getNewestLinkQuery = useQuery({
     queryKey: [QUERY_KEY.alias],
-    enabled, 
-    queryFn: () => linksService.getNewestLink({  
-      user: ctx.user.data.username,
-      status: ctx.user.data.userType,
-    }),
+    enabled,
+    queryFn: () =>
+      linksService.getNewestLink({
+        user: user,
+        status: status,
+      }),
 
     onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_KEY.links])
+      queryClient.invalidateQueries([QUERY_KEY.links]);
     },
-    
   });
   return { ...getNewestLinkQuery, enableQuery, disableQuery };
 }
 
 export function useGetAllLinksQuery() {
   const queryClient = useQueryClient();
+  const [enabled, setEnabled] = useState(false);
+  const enableQuery = () => {
+    setEnabled(true);
+  };
 
-  const  getAllLinksQuery = useQuery({
+  const getAllLinksQuery = useQuery({
     queryFn: () => linksService.getAllLinks(),
-    
+    enabled,
     queryKey: [QUERY_KEY.links],
   });
 
-  return getAllLinksQuery;
+  return { ...getAllLinksQuery, enableQuery };
 }

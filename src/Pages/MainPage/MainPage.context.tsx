@@ -1,8 +1,10 @@
 import { createContextWithDefaultValue, useSignInQuery } from "shared";
-import { UseSignInQuerySelectData } from "shared/api/query/query.hooks";
+import { UseRefreshData, UseSignInQuerySelectData } from "shared/api/query/query.hooks";
 
 interface IPageContext {
-  user: UseSignInQuerySelectData;
+  // user: UseSignInQuerySelectData;
+  user: UseRefreshData;
+  // user: any;
 }
 
 export const { Provider: MainPageProvider, useContext: useMainPageContext } =

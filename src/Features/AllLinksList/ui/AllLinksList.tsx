@@ -15,7 +15,7 @@ export const AllLinksList = ({className}:AllLinksListProps) => {
 
     return (
         <div className={cls.linksContainer}>
-        {loadAllLinksQuery.isSuccess &&
+        {loadAllLinksQuery.isSuccess && 
           loadAllLinksQuery.data?.map((link) => {
             return (
               <Link

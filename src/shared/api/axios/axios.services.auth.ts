@@ -14,7 +14,7 @@ interface linksResponse {
 
 export interface signInResponse {
     accessToken: string,
-    user: {username:string, alias?: string, links?:string[] | []},
+    user: {username:string},
 }
 
 export const AuthService = {
@@ -32,11 +32,11 @@ export const AuthService = {
     async refresh(): Promise<AxiosResponse<signInResponse>>  {
         try {
             const response = await axios.get<signInResponse>(`${API_URL}/refresh`, {withCredentials:true});
-            console.log(response);
+            console.log('response',response);
             localStorage.setItem('accessToken', response.data.accessToken);
             return response;
         } catch (e) {
-            console.log(e.response?.data)
+            return e
         }
     },
 

@@ -59,7 +59,7 @@ export const ModalWindow = ({
       <div className={cls.buttonsBlock}>
 
         <Button
-          onClick={() => ctx.user.setEnabled(true)}
+          // onClick={() => ctx.user.setEnabled(true)}
           // onClick={() => console.log('ctx',ctx)}
           loading={ctx.user.isLoading}
         >
