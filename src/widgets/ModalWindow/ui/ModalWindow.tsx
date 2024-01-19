@@ -2,9 +2,9 @@ import { useState } from "react";
 import cls from "./ModalWindow.module.scss";
 import { Button, Input, Modal, Typography } from "antd";
 
-import { AuthService } from "shared";
+import { AuthService, useSignInMutation } from "shared";
 import { UseUserFormStateReturn } from "Pages/MainPage/hooks/useUserFormState";
-import { useMainPageContext } from "Pages/MainPage/MainPage.context";
+import { useUserStore } from "../zustandStore/user.store";
 
 const { Text } = Typography;
 
@@ -20,9 +20,29 @@ export const ModalWindow = ({
   handleCloseModal,
   userFormState,
 }: ModalWindowProps) => {
+  
+  
+  //zustand
 
-  const ctx = useMainPageContext();
+  const user = useUserStore((state) => state.username);
+  const userStatus = useUserStore((state) => state.status);
+  const updateUsername = useUserStore((state) => state.updateUsername);
+  const updateUserStatus = useUserStore((state) => state.updateUserStatus);
+  console.log('USER: ', user, 'STATUS :', userStatus)
 
+
+
+  const [username, setUsername] = useState(null);
+  const onUsernameChange = (e: any) => {
+    setUsername(e.target.value);
+  };
+
+  const [password, setPassword] = useState(null);
+  const onPasswordChange = (e: any) => {
+    setPassword(e.target.value);
+  };
+
+  const signInMutation = useSignInMutation(username, password);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   return (
@@ -39,14 +59,16 @@ export const ModalWindow = ({
         <div className={cls.inputBlock}>
           <Text>Логин:</Text>
           <Input
-            onChange={userFormState.onUsernameChange}
+            // onChange={userFormState.onUsernameChange}
+            onChange={onUsernameChange}
             placeholder="Введите логин"
           ></Input>
         </div>
         <div className={cls.inputBlock}>
           <Text>Пароль:</Text>
           <Input
-            onChange={userFormState.onPasswordChange}
+            // onChange={userFormState.onPasswordChange}
+            onChange={onPasswordChange}
             placeholder="Введите пароль"
           ></Input>
         </div>
@@ -57,16 +79,22 @@ export const ModalWindow = ({
       </div>
 
       <div className={cls.buttonsBlock}>
-
         <Button
-          // onClick={() => ctx.user.setEnabled(true)}
+          onClick={() => {
+            signInMutation.mutate(undefined, {
+              onSuccess: (data) => {
+                updateUsername(data.user.username);
+                updateUserStatus('signedin'); 
+              },
+            });
+          }}
           // onClick={() => console.log('ctx',ctx)}
-          loading={ctx.user.isLoading}
+          // loading={ctx.user.isLoading}
         >
           Логин
         </Button>
 
-        <Button
+        {/* <Button
           onClick={() =>
             AuthService.registration(
               userFormState.username,
@@ -75,7 +103,7 @@ export const ModalWindow = ({
           }
         >
           Регистрация
-        </Button>
+        </Button> */}
       </div>
     </Modal>
   );

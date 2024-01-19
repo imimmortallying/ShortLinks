@@ -33,7 +33,8 @@ export const linksService = {
             const response = await $linkApi.post('/sendLink', { user:cmd.user, link:cmd.link, status: cmd.status});
             return response.data
         } catch (e) {
-            console.log(e.response?.data)
+            console.log('sendLink axios error')
+            return e
         }
 
     },
@@ -42,6 +43,7 @@ export const linksService = {
     async getNewestLink(cmd:IGetNewestLink): Promise<{alias:string}>{
         try{
             const response = await $linkApi.post('/findNewestLink', {user:cmd.user, status: cmd.status});
+            console.log('RESP', response)
             return response.data
         } catch (e) {
 

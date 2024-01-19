@@ -2,41 +2,39 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { MainPage, RedirectPage } from "Pages";
-import { useRefresh } from "shared";
+import { useRefreshMutation } from "shared";
+// import { useFingerprint } from "shared/lib/fingerprint/fingerprint";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { useUserStore } from "widgets/ModalWindow/zustandStore/user.store";
 
 const App = () => {
-//   const checkAuth = useRefresh();
-//   // проерка авторизации пользователя при загрузке страницы
-//   // как реакт понимает, что ф-я, начинающаяся на use - хук? что такое хук и для чего нужны правила для их использования
-//   // почему, например, я не могу использовать хук внутри useEffect?
-//   useEffect(() => {
-//     checkAuth.enableQuery();
-//     // if (localStorage.getItem('accessToken')) {
-//     // }
-//   }, []);
+  const checkAuth = useRefreshMutation();
+  const updateUserStatus = useUserStore((state) => state.updateUserStatus);
+  const updateUsername = useUserStore((state) => state.updateUsername);
 
-const checkAuth = useRefresh();
+  useEffect(() => {
+    if (localStorage.getItem('accessToken')){
+      checkAuth.mutate(undefined, {
+        onSuccess: (data) => {
+          updateUserStatus("signedin");
+          updateUsername(data.user.username);
+        },
+      });
+    }
 
-    // console.log('CHECK',checkAuth)
-    useEffect(() => {
+  }, []);
+  // const queryClient = new QueryClient();
 
-    checkAuth.enableQuery();
-
-  }, [checkAuth]);
-
-  if (checkAuth.status === "success") {
-    // You can render a loading state or null while the app is being initialized
-    return (
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<MainPage />} />
-            <Route path=":linkAlias" element={<RedirectPage />} />
-          </Routes>
-        </BrowserRouter>
-      );
-  }
-
-  
+  return (
+    // <QueryClientProvider client={queryClient}>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path=":linkAlias" element={<RedirectPage />} />
+      </Routes>
+    </BrowserRouter>
+    // </QueryClientProvider>
+  );
 };
 
 export default App;

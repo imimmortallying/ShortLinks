@@ -1,8 +1,7 @@
-export { createContextWithDefaultValue } from "./lib/createContext/createContextWithDefaultValue"
 
 export { useSendLink } from "./api/query/query.hooks"
 
-export { useRefresh, useSignInQuery, useSignout, useGetAllLinksQuery, useLoadAllLinksQuery, useGetNewestLinkQuery} from "./api/query/query.hooks"
+export { useRefreshMutation, useSignInMutation, useSignout, useGetAllLinksQuery, useLoadAllLinksQuery, useGetNewestLinkQuery} from "./api/query/query.hooks"
 
 export { QUERY_KEY } from "./constants/constants"
 

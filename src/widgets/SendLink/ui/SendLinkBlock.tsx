@@ -1,22 +1,29 @@
-import { useMainPageContext } from "Pages/MainPage/MainPage.context";
 import cls from "./SendLinkBlock.module.scss";
 import { Button, Input } from "antd";
 import { useState } from "react";
 
-import { useGetNewestLinkQuery, useRefresh, useSendLink } from "shared";
+import { useGetNewestLinkQuery, useSendLink } from "shared";
+import { useUserStore } from "widgets/ModalWindow/zustandStore/user.store";
+import { useAliasStore } from "Pages/MainPage/zustandStore/alias.store";
 
 export const SendLinkBlock = () => {
+
+  //zustand
+  const selectUsername = useUserStore((state) => state.username);
+  const selectUserStatus = useUserStore((state) => state.status);
+
+  const updateAlias = useAliasStore((state) => state.updateAlias);
+
   const [link, setLink] = useState("");
   const onLinkChange = (e: any) => {
     setLink(e.target.value);
   };
 
-  const ctx = useMainPageContext();
   //query
 
-  const checkAuth = useRefresh();
-  const sendLink = useSendLink(link, checkAuth.data.username, checkAuth.data.userType);
-  const getNewestLink = useGetNewestLinkQuery(checkAuth.data.username, checkAuth.data.userType);
+  // const checkAuth = useRefresh();
+  const sendLink = useSendLink();
+  const getNewestLink = useGetNewestLinkQuery(selectUsername, selectUserStatus);
 
   
 
@@ -27,14 +34,17 @@ export const SendLinkBlock = () => {
       <Button
         onClick={() => {
 
-          sendLink.mutate(undefined, {
-            onSuccess: () => {
-              getNewestLink.enableQuery();
+
+          // sendLink.mutate({link:link, status: selectUserStatus, user: selectUsername})
+
+
+          sendLink.mutate({link:link, status: selectUserStatus, user: selectUsername}, {
+            onSuccess:(data)=> {
+              // getNewestLink.enableQuery()
+              updateAlias(data.alias)
             }
-            
-          });
-          if (getNewestLink.isSuccess) getNewestLink.disableQuery()
-        }}
+          })  
+          }}
       >
         Сократить
       </Button>

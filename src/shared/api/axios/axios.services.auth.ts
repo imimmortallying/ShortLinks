@@ -18,32 +18,25 @@ export interface signInResponse {
 }
 
 export const AuthService = {
-    async signin(username: string, password: string): Promise<AxiosResponse<signInResponse>> {
+    async signin(username: string, password: string): Promise<signInResponse> {
         try {
             const response = await $api.post<signInResponse>('/signin', { username, password });
             localStorage.setItem('accessToken', response.data.accessToken);
-            return response
+            return response.data
         } catch (e) {
             console.log(e.response?.data)
         }
 
     },
 
-    async refresh(): Promise<AxiosResponse<signInResponse>>  {
+    async refresh(): Promise<signInResponse>  {
         try {
             const response = await axios.get<signInResponse>(`${API_URL}/refresh`, {withCredentials:true});
             console.log('response',response);
             localStorage.setItem('accessToken', response.data.accessToken);
-            return response;
+            return response.data;
         } catch (e) {
             return e
-            // тут проблемное место. Если получил с сервера 401 и не вернул ошибку, то в квири это разрешится как "успех"
-            // со значением undefined, в 'error' и 'settled' тоже будет пусто
-            // тогда какой должен быть полный цикл работы с ошибками?
-            // во-первых, сейчас отсутствие токена и невалидный токен вызовут одинаковую ошибку, значит, нужны разные ошибки
-            // чтобы можно было при инвалидном токене вызвать сценарий освежения acess токена через refresh токен
-            // во-вторых, если я получу ошибку отсутствия токена, мне нужно, чтобы в кеше query это разрешилось 
-            // не в исключение, а в user: fingerprint, status: anon 
         }
     },
 
