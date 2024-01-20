@@ -27,6 +27,7 @@ export const MainPage: FC<MainPageProps> = () => {
   // zustand
   const selectAlias = useAliasStore((state) => state.alias);
   const userStatus = useUserStore((state) => state.status);
+  const setDefaultUserState = useUserStore((state) => state.setDefaultUserState)
   // const updateAlias = useAliasStore((state) => state.updateAlias);
 
   //modal state and handlers
@@ -56,17 +57,12 @@ export const MainPage: FC<MainPageProps> = () => {
     userFormState.username,
     userFormState.password
   );
-  console.log("SENDLINK:", sendLink.data);
 
-  const getNewestLink = useGetNewestLinkQuery();
 
   const loadAllLinksQuery = useGetAllLinksQuery();
 
-  // const checkAuth = useRefresh();
-
   return (
-    // <MainPageProvider value={{ user: signIn }}>
-    // <MainPageProvider value={{ user: checkAuth }}>
+
     <div className={cls.MainPage}>
       <ModalWindow
         userFormState={userFormState}
@@ -81,7 +77,7 @@ export const MainPage: FC<MainPageProps> = () => {
           </Button>
 
           {userStatus === "signedin" && (
-            <Button onClick={() => signout()} block>
+            <Button onClick={() => {signout(), setDefaultUserState()}} block>
               Выйти
             </Button>
           )}
@@ -118,6 +114,5 @@ export const MainPage: FC<MainPageProps> = () => {
         )}
       </div>
     </div>
-    // </MainPageProvider>
   );
 };

@@ -2,15 +2,8 @@
 
 import axios, { AxiosResponse } from "axios";
 
-import { useMutation, useQueryClient } from "react-query";
-// import { useNavigate } from "react-router-dom";
-
-import { AuthResponse, QUERY_KEY } from "shared";
+import { AuthResponse } from "shared";
 import { $api, API_URL } from "./axios.auth.api";
-
-interface linksResponse {
-    links:string
-}
 
 export interface signInResponse {
     accessToken: string,
@@ -32,7 +25,6 @@ export const AuthService = {
     async refresh(): Promise<signInResponse>  {
         try {
             const response = await axios.get<signInResponse>(`${API_URL}/refresh`, {withCredentials:true});
-            console.log('response',response);
             localStorage.setItem('accessToken', response.data.accessToken);
             return response.data;
         } catch (e) {

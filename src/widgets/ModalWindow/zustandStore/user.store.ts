@@ -6,6 +6,7 @@ interface IUserState {
 
     updateUsername: (username:string) => void,
     updateUserStatus: (status: 'anon' | 'signedin') => void,
+    setDefaultUserState: () => void,
 }
 
 export const useUserStore = create<IUserState>((set)=>({
@@ -14,4 +15,6 @@ export const useUserStore = create<IUserState>((set)=>({
 
     updateUsername: (username) => set(() => ({ username: username })),
     updateUserStatus: (status) => set(() => ({ status: status })),
+
+    setDefaultUserState:()=> set(() => ({ status: 'anon', username: null})),
 }))
