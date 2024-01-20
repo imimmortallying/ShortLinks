@@ -9,7 +9,7 @@ import { useAliasStore } from "Pages/MainPage/zustandStore/alias.store";
 export const SendLinkBlock = () => {
   // antd
   const { Text } = Typography;
-  
+
   //zustand
   const selectUsername = useUserStore((state) => state.username);
   const selectUserStatus = useUserStore((state) => state.status);
@@ -41,7 +41,15 @@ export const SendLinkBlock = () => {
         <Button
           onClick={() => {
             sendLink.mutate(
-              { link: link, status: selectUserStatus, user: selectUsername, TTL: TTLinputState ? 'permanent' : TTLinput },
+              {
+                link: link,
+                status: selectUserStatus,
+                user: selectUsername,
+                TTL: TTLinputState && selectUserStatus === "signedin"? "permanent" : TTLinput,
+                // костыль. TTL определяется всегда, даже если юзер === анон
+                // т.е. если юзер анон, уйдет TTLinputState (30 дефолт). Но бэк не считает этот TTL,
+                // потому что будет ориентироваться на статус, TTL просто проигнорируется
+              },
               {
                 onSuccess: (data) => {
                   updateAlias(data.alias);
@@ -53,23 +61,22 @@ export const SendLinkBlock = () => {
           Сократить
         </Button>
       </div>
-      {selectUserStatus === 'signedin' &&
-      <div className={cls.SendLinkTTL}>
-        <Text className={cls.TTLtext}>Укажите срок жизни ссылки, дн. : </Text>
-        <InputNumber
-          className={cls.TTLinput}
-          disabled={TTLinputState}
-          onChange={onTTLinputChange}
-          defaultValue={30}
-          placeholder="укажите срок жизни ссылки"
-          min={1}
-          max={30}
-        ></InputNumber>
-        <Text className={cls.TTLtext}>Или пусть живет бессрочно : </Text>
-        <Checkbox onClick={onTTLinputStateChange}></Checkbox>
-      </div>
-      }
-      
+      {selectUserStatus === "signedin" && (
+        <div className={cls.SendLinkTTL}>
+          <Text className={cls.TTLtext}>Укажите срок жизни ссылки, дн. : </Text>
+          <InputNumber
+            className={cls.TTLinput}
+            disabled={TTLinputState}
+            onChange={onTTLinputChange}
+            defaultValue={30}
+            placeholder="укажите срок жизни ссылки"
+            min={1}
+            max={30}
+          ></InputNumber>
+          <Text className={cls.TTLtext}>Или пусть живет бессрочно : </Text>
+          <Checkbox onClick={onTTLinputStateChange}></Checkbox>
+        </div>
+      )}
     </div>
   );
 };
