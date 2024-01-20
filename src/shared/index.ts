@@ -1,7 +1,7 @@
 
 export { useSendLink } from "./api/query/query.hooks"
 
-export { useRefreshMutation, useSignInMutation, useSignout, useGetAllLinksQuery, useLoadAllLinksQuery, useGetNewestLinkQuery} from "./api/query/query.hooks"
+export { useRefreshMutation, useSignInMutation, useSignout, useGetAllLinksQuery, useLoadAllLinksQuery } from "./api/query/query.hooks"
 
 export { QUERY_KEY } from "./constants/constants"
 

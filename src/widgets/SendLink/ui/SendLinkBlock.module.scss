@@ -1,5 +1,30 @@
 .SendLinkBlock {
     display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.SendLinkHeader{
+    // width: 100%;
+    display: flex;
     flex-direction: row;
     gap: 20px;
+}
+
+.SendLinkTTL {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.TTLtext{
+    white-space: nowrap;
+    // line-height: 100%;
+    align-self: center;
+    // margin-right: 10px;
+}
+
+.TTLinput{
+    height: inherit;
+    width: 10%;
 }

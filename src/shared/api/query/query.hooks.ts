@@ -62,11 +62,12 @@ export function useSendLink(
   const userFinger = useFingerprint();
   
   const sendLinkMutation = useMutation({
-    mutationFn: ({link, user, status} : {link: string, user?: string, status?: "anon" | "signedin"}) =>
+    mutationFn: ({link, user, status, TTL} : {link: string, user?: string, status?: "anon" | "signedin", TTL?: number | 'permanent'}) =>
       linksService.sendLink({
         link: link,
         user: user ? user : userFinger,
         status: status ? status : 'anon',
+        TTL: TTL
       }),
     onSuccess: (data) => {
       console.log('ALIAS:', data)
@@ -78,40 +79,6 @@ export function useSendLink(
   });
 
   return {...sendLinkMutation};
-}
-
-export function useGetNewestLinkQuery(
-  user?: string,
-  status?: "anon" | "signedin"
-) {
-  const queryClient = useQueryClient();
-
-  const userFinger = 'useFingerprint()';
-
-  const [enabled, setEnabled] = useState(false);
-
-  const enableQuery = () => {
-    setEnabled(true);
-  };
-
-  const disableQuery = () => {
-    setEnabled(false);
-  };
-
-  const getNewestLinkQuery = useQuery({
-    queryKey: [QUERY_KEY.alias],
-    enabled,
-    queryFn: () =>
-      linksService.getNewestLink({
-        user: user ? user : userFinger,
-        status: status ? status : 'anon',
-      }),
-
-    onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_KEY.links]);
-    },
-  });
-  return { ...getNewestLinkQuery, enableQuery, disableQuery };
 }
 
 export function useGetAllLinksQuery() {

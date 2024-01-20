@@ -7,10 +7,7 @@ import { SendLinkBlock } from "widgets/SendLink";
 import { ModalWindow } from "widgets/ModalWindow";
 import {
   useSignout,
-  useSignInMutation,
   useGetAllLinksQuery,
-  useGetNewestLinkQuery,
-  useSendLink,
 } from "shared";
 
 import { useUserFormState } from "./hooks/useUserFormState";
@@ -48,15 +45,8 @@ export const MainPage: FC<MainPageProps> = () => {
   const { Text, Link } = Typography;
 
   // query
-
   const signout = useSignout();
-  const sendLink = useSendLink();
   const userFormState = useUserFormState();
-
-  const signIn = useSignInMutation(
-    userFormState.username,
-    userFormState.password
-  );
 
 
   const loadAllLinksQuery = useGetAllLinksQuery();

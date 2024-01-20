@@ -1,53 +1,75 @@
 import cls from "./SendLinkBlock.module.scss";
-import { Button, Input } from "antd";
+import { Button, Checkbox, Input, InputNumber, Typography } from "antd";
 import { useState } from "react";
 
-import { useGetNewestLinkQuery, useSendLink } from "shared";
+import { useSendLink } from "shared";
 import { useUserStore } from "widgets/ModalWindow/zustandStore/user.store";
 import { useAliasStore } from "Pages/MainPage/zustandStore/alias.store";
 
 export const SendLinkBlock = () => {
-
+  // antd
+  const { Text } = Typography;
+  
   //zustand
   const selectUsername = useUserStore((state) => state.username);
   const selectUserStatus = useUserStore((state) => state.status);
-
   const updateAlias = useAliasStore((state) => state.updateAlias);
 
+  //localstate
   const [link, setLink] = useState("");
   const onLinkChange = (e: any) => {
     setLink(e.target.value);
   };
 
+  const [TTLinput, setTTLinput] = useState(30);
+  const onTTLinputChange = (value: any) => {
+    setTTLinput(value);
+  };
+
+  const [TTLinputState, setTTLinputState] = useState(false);
+  const onTTLinputStateChange = () => {
+    setTTLinputState(!TTLinputState);
+  };
+
   //query
-
-  // const checkAuth = useRefresh();
   const sendLink = useSendLink();
-  const getNewestLink = useGetNewestLinkQuery(selectUsername, selectUserStatus);
-
-  
 
   return (
     <div className={cls.SendLinkBlock}>
-      <Input onChange={onLinkChange}></Input>
-
-      <Button
-        onClick={() => {
-
-
-          // sendLink.mutate({link:link, status: selectUserStatus, user: selectUsername})
-
-
-          sendLink.mutate({link:link, status: selectUserStatus, user: selectUsername}, {
-            onSuccess:(data)=> {
-              // getNewestLink.enableQuery()
-              updateAlias(data.alias)
-            }
-          })  
+      <div className={cls.SendLinkHeader}>
+        <Input onChange={onLinkChange} placeholder="вставьте ссылку"></Input>
+        <Button
+          onClick={() => {
+            sendLink.mutate(
+              { link: link, status: selectUserStatus, user: selectUsername, TTL: TTLinputState ? 'permanent' : TTLinput },
+              {
+                onSuccess: (data) => {
+                  updateAlias(data.alias);
+                },
+              }
+            );
           }}
-      >
-        Сократить
-      </Button>
+        >
+          Сократить
+        </Button>
+      </div>
+      {selectUserStatus === 'signedin' &&
+      <div className={cls.SendLinkTTL}>
+        <Text className={cls.TTLtext}>Укажите срок жизни ссылки, дн. : </Text>
+        <InputNumber
+          className={cls.TTLinput}
+          disabled={TTLinputState}
+          onChange={onTTLinputChange}
+          defaultValue={30}
+          placeholder="укажите срок жизни ссылки"
+          min={1}
+          max={30}
+        ></InputNumber>
+        <Text className={cls.TTLtext}>Или пусть живет бессрочно : </Text>
+        <Checkbox onClick={onTTLinputStateChange}></Checkbox>
+      </div>
+      }
+      
     </div>
   );
 };
