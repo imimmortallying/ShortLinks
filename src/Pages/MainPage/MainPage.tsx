@@ -5,10 +5,7 @@ import { Button, Typography } from "antd";
 
 import { SendLinkBlock } from "widgets/SendLink";
 import { ModalWindow } from "widgets/ModalWindow";
-import {
-  useSignout,
-  useGetAllLinksQuery,
-} from "shared";
+import { useSignout, useGetAllLinksQuery } from "shared";
 
 import { useUserFormState } from "./hooks/useUserFormState";
 import { AllLinksList } from "Features/AllLinksList/ui/AllLinksList";
@@ -24,10 +21,35 @@ export const MainPage: FC<MainPageProps> = () => {
   // zustand
   const selectAlias = useAliasStore((state) => state.alias);
   const userStatus = useUserStore((state) => state.status);
-  const setDefaultUserState = useUserStore((state) => state.setDefaultUserState)
+  const setDefaultUserState = useUserStore(
+    (state) => state.setDefaultUserState
+  );
   // const updateAlias = useAliasStore((state) => state.updateAlias);
 
+  // form state - login or signup
+
+  enum formStates {
+    SIGNUP = "signup",
+    SIGNIN = "signin",
+  }
+
+  const [formState, setFormState] = useState<formStates>();
+
+  const toggleFormState = () => {
+    formState === formStates.SIGNIN
+      ? setFormState(formStates.SIGNUP)
+      : setFormState(formStates.SIGNIN);
+  };
+
+  const setSignupFormState = () => {
+    setFormState(formStates.SIGNUP);
+  };
+
+  const setSigninFormState = () => {
+    setFormState(formStates.SIGNIN);
+  };
   //modal state and handlers
+
   const [isOpened, setOpen] = useState(false);
   const showModal = () => {
     setOpen(true);
@@ -42,32 +64,50 @@ export const MainPage: FC<MainPageProps> = () => {
     setVisible(true);
   };
 
+  //antd
   const { Text, Link } = Typography;
 
   // query
   const signout = useSignout();
-  const userFormState = useUserFormState();
-
-
   const loadAllLinksQuery = useGetAllLinksQuery();
 
   return (
-
     <div className={cls.MainPage}>
       <ModalWindow
-        userFormState={userFormState}
         isOpened={isOpened}
         handleCloseModal={handleCloseModal}
+        formState={formState}
+        onToggleFormState={toggleFormState}
       ></ModalWindow>
 
       <div className={cls.Header}>
         <div className={cls.authButtonsBlock}>
-          <Button type="primary" onClick={showModal} block>
-            Вход/регистрация
+          <Button
+            type="primary"
+            onClick={() => {
+              setSigninFormState(), showModal();
+            }}
+            block
+          >
+            Вход
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              setSignupFormState(), showModal();
+            }}
+            block
+          >
+            Регистрация
           </Button>
 
           {userStatus === "signedin" && (
-            <Button onClick={() => {signout(), setDefaultUserState()}} block>
+            <Button
+              onClick={() => {
+                signout(), setDefaultUserState();
+              }}
+              block
+            >
               Выйти
             </Button>
           )}

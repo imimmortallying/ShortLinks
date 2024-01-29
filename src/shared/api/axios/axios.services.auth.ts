@@ -34,7 +34,7 @@ export const AuthService = {
 
     // нет необходимости использовать $api т.к. при регистрации я не использую токен
     // поэтому перехватчик не нужен
-    async registration(username: string, password: string): Promise<AxiosResponse<AuthResponse>> {
+    async signup(username: string, password: string): Promise<AxiosResponse<AuthResponse>> {
         try {
             return await $api.post<AuthResponse>('/signup', { username, password })
         } catch (e) {

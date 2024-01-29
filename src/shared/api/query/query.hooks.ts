@@ -41,6 +41,13 @@ export function useSignInMutation(username: string, password: string) {
   return { ...signInMutation };
 }
 
+export function useSignUpMutation(username: string, password: string) {
+  const signUpMutation = useMutation({
+    mutationFn: () => AuthService.signup(username, password),
+  });
+  return { ...signUpMutation };
+}
+
 export function useRefreshMutation() {
 
   const refreshMutation = useMutation({

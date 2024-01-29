@@ -3,8 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { MainPage, RedirectPage } from "Pages";
 import { useRefreshMutation } from "shared";
-// import { useFingerprint } from "shared/lib/fingerprint/fingerprint";
-import { QueryClient, QueryClientProvider } from "react-query";
 import { useUserStore } from "widgets/ModalWindow/zustandStore/user.store";
 
 const App = () => {
