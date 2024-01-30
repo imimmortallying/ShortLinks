@@ -1,11 +1,9 @@
-import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AuthService, signInResponse } from "../axios/axios.services.auth";
 import { QUERY_KEY } from "shared";
 import { linksService } from "../axios/axios.services.links";
 import { useState } from "react";
 import { useFingerprint } from "shared/lib/fingerprint/fingerprint";
-
-
 
 export const useLoadAllLinksQuery = () => {
   return useQuery({
@@ -34,9 +32,10 @@ export function useSignout() {
 // export type UseSignInQueryCacheData = AxiosResponse<signInResponse>;
 
 export function useSignInMutation(username: string, password: string) {
-  const queryClient = useQueryClient();
+
   const signInMutation = useMutation({
     mutationFn: () => AuthService.signin(username, password),
+    // throwOnError: true,
   });
   return { ...signInMutation };
 }
@@ -44,7 +43,10 @@ export function useSignInMutation(username: string, password: string) {
 export function useSignUpMutation(username: string, password: string) {
   const signUpMutation = useMutation({
     mutationFn: () => AuthService.signup(username, password),
-  });
+    throwOnError: true,
+  }
+  
+  );
   return { ...signUpMutation };
 }
 
@@ -79,7 +81,7 @@ export function useSendLink(
     onSuccess: (data) => {
       console.log('ALIAS:', data)
       // queryClient.setQueryData([QUERY_KEY.alias])
-      queryClient.invalidateQueries([QUERY_KEY.links])
+      // queryClient.invalidateQueries([QUERY_KEY.links])
     },
 
     onError: () => console.log("error in send link"),

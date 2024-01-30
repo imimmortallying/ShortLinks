@@ -11,6 +11,7 @@ import { useUserFormState } from "./hooks/useUserFormState";
 import { AllLinksList } from "Features/AllLinksList/ui/AllLinksList";
 import { useAliasStore } from "./zustandStore/alias.store";
 import { useUserStore } from "widgets/ModalWindow/zustandStore/user.store";
+import { ErrorBoundary } from "react-error-boundary";
 
 interface MainPageProps {
   className?: string;
@@ -26,7 +27,20 @@ export const MainPage: FC<MainPageProps> = () => {
   );
   // const updateAlias = useAliasStore((state) => state.updateAlias);
 
+    //! как теперь ловить ошибки на нужном уровне?
+
   // form state - login or signup
+  //@ts-ignore
+  function fallbackRender({ error, resetErrorBoundary }) {
+    // Call resetErrorBoundary() to reset the error boundary and retry the render.
+  
+    return (
+      <div role="alert">
+        <p>Something went wrong:</p>
+        <pre style={{ color: "red" }}>{error.message}</pre>
+      </div>
+    );
+  }
 
   enum formStates {
     SIGNUP = "signup",
@@ -73,12 +87,15 @@ export const MainPage: FC<MainPageProps> = () => {
 
   return (
     <div className={cls.MainPage}>
+      {/* <ErrorBoundary fallbackRender={ModalWindow}> */}
+        
       <ModalWindow
         isOpened={isOpened}
         handleCloseModal={handleCloseModal}
         formState={formState}
         onToggleFormState={toggleFormState}
       ></ModalWindow>
+      {/* </ErrorBoundary> */}
 
       <div className={cls.Header}>
         <div className={cls.authButtonsBlock}>
@@ -144,5 +161,6 @@ export const MainPage: FC<MainPageProps> = () => {
         )}
       </div>
     </div>
+    
   );
 };

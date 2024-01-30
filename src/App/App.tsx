@@ -4,6 +4,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { MainPage, RedirectPage } from "Pages";
 import { useRefreshMutation } from "shared";
 import { useUserStore } from "widgets/ModalWindow/zustandStore/user.store";
+import { ErrorBoundary } from "react-error-boundary";
+import { ErrorBoundryComponent } from "widgets/ModalWindow/errors/ErrorBoundryComponent";
 
 const App = () => {
   const checkAuth = useRefreshMutation();
@@ -21,17 +23,18 @@ const App = () => {
     }
 
   }, []);
+
   // const queryClient = new QueryClient();
 
   return (
-    // <QueryClientProvider client={queryClient}>
     <BrowserRouter>
+    {/* <ErrorBoundary FallbackComponent={ErrorBoundryComponent}> */}
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path=":linkAlias" element={<RedirectPage />} />
       </Routes>
+    {/* </ErrorBoundary> */}
     </BrowserRouter>
-    // </QueryClientProvider>
   );
 };
 

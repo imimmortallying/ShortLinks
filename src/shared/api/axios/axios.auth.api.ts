@@ -16,6 +16,7 @@ $api.interceptors.request.use((config)=>{
 $api.interceptors.response.use((config) => {
     return config;
 }, async (error)=>{
+
     const originalRequest = error.config;
     if (error.response.status === 401 && error.config && !error.config._isRetry) {
         originalRequest._isRetry = true;
@@ -26,6 +27,7 @@ $api.interceptors.response.use((config) => {
         } catch (e) {
             console.log(e, 'не авторизован')
         }
-        throw error;
+        
     }
+    throw error;
 })
