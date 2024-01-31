@@ -43,7 +43,14 @@ export function useSignInMutation(username: string, password: string) {
 export function useSignUpMutation(username: string, password: string) {
   const signUpMutation = useMutation({
     mutationFn: () => AuthService.signup(username, password),
-    throwOnError: true,
+    throwOnError: (error:any)=>{
+      // как правильно выстраивать пайплайн ошибок?
+      // я с сервера отправляю статус и message. 
+      // в аксиос пересобираю свою ошибку: throw ({status: e.response.status, message: e.response?.data?.message})
+      // тут проверяю статус этой пересобранной ошибки
+      // но как заставить всю цепочку действовать по единым правилам? как не писать и не проверять ручками соблюдение всех условий
+      return error.status >= 500
+    }, 
   }
   
   );
