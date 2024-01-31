@@ -63,25 +63,42 @@ export const ModalWindow = ({
   };
 
   // ф-ии проверки заполнения полей
+
+function resetFormState() {
+  setErrorMessage('');
+
+  setUsername('');
+  setPassword('');
+  setRepeatedPassword('');
+
+  changeIsPasswordsError(false);
+  changeIsUsernameError(false);
+}
+
   function checkPasswordFields() {
-    if (password != repeatedPassword) {
+    if (password !== repeatedPassword) {
       setMessageOnErrorChange(errorMessages.passwordsNotMatch);
       changeIsPasswordsError(true);
       return false;
     } else {
       changeIsPasswordsError(false);
-      return true
-    };
+      return true;
+    }
   }
 
   function checkAreFieldsFilled() {
     if (password.length < 3 || username.length < 3) {
       setMessageOnErrorChange(errorMessages.fillAllFields);
-      changeIsUsernameError(true);
+
+      if (username.length < 3) changeIsUsernameError(true);
+      else changeIsUsernameError(false);
+      if (password.length < 3) changeIsPasswordsError(true);
+      else changeIsPasswordsError(false);
       return false;
     } else {
-      changeIsUsernameError(false)
-      return true
+      changeIsPasswordsError(false);
+      changeIsUsernameError(false);
+      return true;
     };
   }
 
@@ -109,7 +126,7 @@ export const ModalWindow = ({
       open={isOpened}
       // onOk={handleOk}
       confirmLoading={confirmLoading}
-      onCancel={handleCloseModal}
+      onCancel={()=>{handleCloseModal(), resetFormState()}}
       footer={null}
     >
       {/* <p>{modalText}</p> */}
@@ -119,7 +136,8 @@ export const ModalWindow = ({
         <div className={cls.inputBlock}>
           <Text>Логин:</Text>
           <Input
-            status={usernameError ? 'error' : ''}
+            status={usernameError ? "error" : ""}
+            value={username}
             maxLength={10}
             onChange={onUsernameChange}
             placeholder="Введите логин"
@@ -128,7 +146,8 @@ export const ModalWindow = ({
         <div className={cls.inputBlock}>
           <Text>Пароль:</Text>
           <Input
-          status={passwordsError ? 'error' : ''}
+            status={passwordsError ? "error" : ""}
+            value={password}
             maxLength={10}
             onChange={onPasswordChange}
             placeholder="Введите пароль"
@@ -138,7 +157,8 @@ export const ModalWindow = ({
           <div className={cls.inputBlock}>
             <Text>Повторите пароль:</Text>
             <Input
-            status={passwordsError ? 'error' : ''}
+              status={passwordsError ? "error" : ""}
+              value={repeatedPassword}
               maxLength={10}
               onChange={onRepeatedPasswordChange}
               placeholder="Повторите пароль"
@@ -155,16 +175,16 @@ export const ModalWindow = ({
             <Button
               onClick={() => {
                 if (checkAreFieldsFilled() && checkPasswordFields())
-                signInMutation.mutate(undefined, {
-                  onError: (error) => {
-                    console.error("Sign-in err onError: ", error);
-                  },
-                  onSuccess: (data) => {
-                    // console.log('DATA ', data) // никакой ошибки нет, хотя я выбрасываю исключение из аксиос
-                    updateUsername(data.user.username);
-                    updateUserStatus("signedin");
-                  },
-                });
+                  signInMutation.mutate(undefined, {
+                    onError: (error) => {
+                      console.error("Sign-in err onError: ", error);
+                    },
+                    onSuccess: (data) => {
+                      // console.log('DATA ', data) // никакой ошибки нет, хотя я выбрасываю исключение из аксиос
+                      updateUsername(data.user.username);
+                      updateUserStatus("signedin");
+                    },
+                  });
               }}
               // onClick={()=>{throw new Error('123')}}
               // loading={ctx.user.isLoading}
@@ -187,6 +207,7 @@ export const ModalWindow = ({
             type="link"
             onClick={() => {
               onToggleFormState();
+              resetFormState();
             }}
           >
             {formState === "signin"
