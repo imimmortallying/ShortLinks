@@ -53,9 +53,13 @@ export const ModalWindow = ({
 
   // form state
   enum errorMessages {
+    // общие
     fillAllFields = "Необходимо заполнить все поля",
     passwordsNotMatch = "Введенные пароли не совпадают",
-    server409Username = 'Пользователь с таким именем уже существует'
+    // signup
+    server409Username = 'Пользователь с таким именем уже существует',
+    //signin
+    server404 = 'Неверный логин или пароль'
   };
 
   enum successMessages {
@@ -86,10 +90,17 @@ function resetFormState() { // очистка полей и сообщения �
   changeIsPasswordsError(false);
   changeIsUsernameError(false);
 }
-  function handleServerError() { // если ошибка <500, то выводит ошибку юзеру
+  function handleSignupServerError() { // если ошибка <500, то выводит ошибку юзеру
     setResponseMessage(errorMessages.server409Username);
     changeMessageType("danger");
     changeIsUsernameError(true);
+  };
+
+  function handleSigninServerError() { // если ошибка <500, то выводит ошибку юзеру
+    setResponseMessage(errorMessages.server404);
+    changeMessageType("danger");
+    changeIsUsernameError(true);
+    changeIsPasswordsError(true);
   };
 
   function handleSuccessfullSignup() { // если сервер создал юзера, вывести сообщение в UI
@@ -202,18 +213,18 @@ function resetFormState() { // очистка полей и сообщения �
               onClick={() => {
                 if (checkAreFieldsFilled())
                   signInMutation.mutate(undefined, {
-                    onError: (error) => {
-                      console.error("Sign-in err onError: ", error);
+                    onError: () => {
+                      handleSigninServerError();
                     },
                     onSuccess: (data) => {
-                      // console.log('DATA ', data) // никакой ошибки нет, хотя я выбрасываю исключение из аксиос
                       updateUsername(data.user.username);
                       updateUserStatus("signedin");
+                      handleCloseModal();
+                      resetFormState();
                     },
                   });
               }}
-              // onClick={()=>{throw new Error('123')}}
-              // loading={ctx.user.isLoading}
+              loading={signInMutation.isPending}
             >
               Войти 
             </Button>
@@ -223,7 +234,7 @@ function resetFormState() { // очистка полей и сообщения �
                 if (checkAreFieldsFilled() && checkPasswordFields())
                   signUpMutation.mutate(undefined, {
                 onError:(error)=>{
-                  if (error.status === 409) handleServerError();
+                  if (error.status === 409) handleSignupServerError();
                 },
                 onSuccess:()=>{
                   handleSuccessfullSignup();
