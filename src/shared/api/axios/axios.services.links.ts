@@ -20,7 +20,7 @@ export const linksService = {
       console.log("response:", response);
       return response.data;
     } catch (e) {
-      console.log(e.response?.data);
+      throw (e)
     }
   },
 
@@ -37,8 +37,7 @@ export const linksService = {
       });
       return response.data;
     } catch (e) {
-      console.log("sendLink axios error");
-      return e;
+      throw (e)
     }
   },
 
@@ -50,7 +49,9 @@ export const linksService = {
       });
       console.log("RESP", response);
       return response.data;
-    } catch (e) {}
+    } catch (e) {
+      throw (e)
+    }
   },
 
   async getAllLinks(): Promise<{alias: string, clicksCount: number}[]> {
@@ -60,8 +61,7 @@ export const linksService = {
       });
       return response.data.links;
     } catch (e) {
-        console.log(e.response?.data);
-        return e
+      throw (e)
     }
   },
 };

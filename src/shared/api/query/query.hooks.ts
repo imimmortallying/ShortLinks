@@ -92,8 +92,7 @@ export function useSendLink(
       // queryClient.setQueryData([QUERY_KEY.alias])
       // queryClient.invalidateQueries([QUERY_KEY.links])
     },
-
-    onError: () => console.log("error in send link"),
+    // onError: (e) => console.log("error in send link ", e),
   });
 
   return {...sendLinkMutation};

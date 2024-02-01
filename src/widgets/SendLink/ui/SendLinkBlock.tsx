@@ -6,7 +6,14 @@ import { useSendLink } from "shared";
 import { useUserStore } from "widgets/ModalWindow/zustandStore/user.store";
 import { useAliasStore } from "Pages/MainPage/zustandStore/alias.store";
 
+import toast, { Toaster } from 'react-hot-toast';
+import { AxiosError } from "axios";
+
 export const SendLinkBlock = () => {
+
+  //toaster
+  const notify = (message: string) => toast(message);
+
   // antd
   const { Text } = Typography;
 
@@ -36,6 +43,7 @@ export const SendLinkBlock = () => {
 
   return (
     <div className={cls.SendLinkBlock}>
+      <Toaster />
       <div className={cls.SendLinkHeader}>
         <Input onChange={onLinkChange} placeholder="вставьте ссылку"></Input>
         <Button
@@ -54,6 +62,10 @@ export const SendLinkBlock = () => {
                 onSuccess: (data) => {
                   updateAlias(data.alias);
                 },
+                onError:(error: Error)=>{
+                  if (error instanceof AxiosError && error.code === 'ERR_NETWORK')
+                  notify('Не удается сократить ссылку - нет соединения с сервером')
+                }
               }
             );
           }}

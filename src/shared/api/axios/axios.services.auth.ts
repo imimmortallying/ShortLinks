@@ -41,7 +41,7 @@ export const AuthService = {
             localStorage.setItem('accessToken', response.data.accessToken);
             return response.data;
         } catch (e) {
-            return e
+            throw (e)
         }
     },
 
@@ -61,7 +61,7 @@ export const AuthService = {
             localStorage.removeItem('accessToken');
             return await $api.delete('/signout');
         } catch (e) {
-            console.log(e)
+            throw (e)
         }
     },
 

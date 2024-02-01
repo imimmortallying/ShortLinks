@@ -31,16 +31,6 @@ export const MainPage: FC<MainPageProps> = () => {
 
   // form state - login or signup
   //@ts-ignore
-  function fallbackRender({ error, resetErrorBoundary }) {
-    // Call resetErrorBoundary() to reset the error boundary and retry the render.
-  
-    return (
-      <div role="alert">
-        <p>Something went wrong:</p>
-        <pre style={{ color: "red" }}>{error.message}</pre>
-      </div>
-    );
-  }
 
   enum formStates {
     SIGNUP = "signup",
@@ -87,7 +77,7 @@ export const MainPage: FC<MainPageProps> = () => {
 
   return (
     <div className={cls.MainPage}>
-      <ErrorBoundary fallbackRender={fallbackRender}>
+      {/* <ErrorBoundary fallbackRender={fallbackRender}> */}
         
       <ModalWindow
         isOpened={isOpened}
@@ -95,7 +85,7 @@ export const MainPage: FC<MainPageProps> = () => {
         formState={formState}
         onToggleFormState={toggleFormState}
       ></ModalWindow>
-      </ErrorBoundary>
+      {/* </ErrorBoundary> */}
 
       <div className={cls.Header}>
         <div className={cls.authButtonsBlock}>
