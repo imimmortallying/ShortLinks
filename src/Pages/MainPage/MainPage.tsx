@@ -87,7 +87,7 @@ export const MainPage: FC<MainPageProps> = () => {
 
   return (
     <div className={cls.MainPage}>
-      {/* <ErrorBoundary fallbackRender={ModalWindow}> */}
+      <ErrorBoundary fallbackRender={fallbackRender}>
         
       <ModalWindow
         isOpened={isOpened}
@@ -95,7 +95,7 @@ export const MainPage: FC<MainPageProps> = () => {
         formState={formState}
         onToggleFormState={toggleFormState}
       ></ModalWindow>
-      {/* </ErrorBoundary> */}
+      </ErrorBoundary>
 
       <div className={cls.Header}>
         <div className={cls.authButtonsBlock}>

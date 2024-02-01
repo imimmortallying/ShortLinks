@@ -9,6 +9,7 @@ import { useUserStore } from "../zustandStore/user.store";
 import { useSignUpMutation } from "shared/api/query/query.hooks";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorBoundryComponent } from "../errors/ErrorBoundryComponent";
+import { AxiosError } from "axios";
 
 const { Text } = Typography;
 
@@ -55,8 +56,9 @@ export const ModalWindow = ({
   enum errorMessages {
     // общие
     fillAllFields = "Необходимо заполнить все поля",
-    passwordsNotMatch = "Введенные пароли не совпадают",
+    network = 'Ошибка при соединении с сервером',
     // signup
+    passwordsNotMatch = "Введенные пароли не совпадают",
     server409Username = 'Пользователь с таким именем уже существует',
     //signin
     server404 = 'Неверный логин или пароль'
@@ -77,7 +79,15 @@ export const ModalWindow = ({
       setMessageType(messageType);
     };
 
+    function isAxiosError(error: any): error is AxiosError {
+      return error.isAxiosError === true;
+    }
+
   // ф-ии проверки заполнения полей
+  function handleNetworkError() {
+    setResponseMessage(errorMessages.network);
+    changeMessageType("danger");
+  }
 
 function resetFormState() { // очистка полей и сообщения юзеру при смене типа модалки
   setResponseMessage('Заполните поля:');
@@ -96,7 +106,7 @@ function resetFormState() { // очистка полей и сообщения �
     changeIsUsernameError(true);
   };
 
-  function handleSigninServerError() { // если ошибка <500, то выводит ошибку юзеру
+  function handleSigninServerError() { // если пароль или логин не подошли, то выводит ошибку юзеру
     setResponseMessage(errorMessages.server404);
     changeMessageType("danger");
     changeIsUsernameError(true);
@@ -137,8 +147,7 @@ function resetFormState() { // очистка полей и сообщения �
     };
   };
 
-  // состояние инпутов в зависимости от текущей ошибки
-
+  // состояния инпутов в зависимости от текущей ошибки
   const [usernameError, setIsUsernameError] = useState(false);
   const changeIsUsernameError = (isError: boolean) => {
     setIsUsernameError(isError);
@@ -213,12 +222,18 @@ function resetFormState() { // очистка полей и сообщения �
               onClick={() => {
                 if (checkAreFieldsFilled())
                   signInMutation.mutate(undefined, {
-                    onError: () => {
-                      handleSigninServerError();
+                    onError: (error: Error) => {
+                      if (isAxiosError(error)){
+                        if (error.code === 'ERR_NETWORK') handleNetworkError();
+                        if (error.response.status === 404) handleSigninServerError();
+                      }
+                      
                     },
                     onSuccess: (data) => {
+                      // zustand state
                       updateUsername(data.user.username);
                       updateUserStatus("signedin");
+                      // modal window local state handling
                       handleCloseModal();
                       resetFormState();
                     },
@@ -233,8 +248,13 @@ function resetFormState() { // очистка полей и сообщения �
               onClick={() => {
                 if (checkAreFieldsFilled() && checkPasswordFields())
                   signUpMutation.mutate(undefined, {
-                onError:(error)=>{
-                  if (error.status === 409) handleSignupServerError();
+                onError:(error: Error)=>{
+                  if (isAxiosError(error)){
+                    console.log('modal err ',error, error.status)
+                    if (error.code === 'ERR_NETWORK') handleNetworkError()
+                    if (error.response.status === 409) handleSignupServerError();
+                  }
+                  // console.log('modal error signup ', error.message)
                 },
                 onSuccess:()=>{
                   handleSuccessfullSignup();

@@ -29,7 +29,7 @@ export const AuthService = {
             // или как это обработать правильно?
         } catch (e) {
             console.log('signin error from axios: ', e)
-            throw new Error (e)
+            throw (e)
             // return e
         }
 
@@ -51,10 +51,8 @@ export const AuthService = {
         try {
             return await $api.post<AuthResponse>('/signup', { username, password })
         } catch (e) {
-            console.log('axios sgnup ', e.response)
-            // попробовать проверить в query статус ошибки. Если > 500, то бросить ошибку в boundary
-            // если меньше, то пусть работает onError
-            throw ({status: e.response.status, message: e.response?.data?.message})
+            console.log('axios sgnup ', e)
+            throw (e)
         }
     },
     
