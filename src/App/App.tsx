@@ -41,7 +41,7 @@ const App = () => {
     <ErrorBoundary FallbackComponent={ErrorBoundryComponent}>
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path=":linkAlias" element={<RedirectPage />} />
+        {/* <Route path=":linkAlias" element={<RedirectPage />} /> */}
       </Routes>
     </ErrorBoundary>
     </BrowserRouter>

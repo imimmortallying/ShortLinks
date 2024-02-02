@@ -14,10 +14,10 @@ export const AllLinksList = () => {
           return (
             <div className={cls.linkWithCount} key={linkObj.alias}>
               <Link
-                href={"http://localhost:4000/" + linkObj.alias}
+                href={"http://localhost:5000/" + linkObj.alias}
                 className={cls.linkItem}
               >
-                {"http://localhost:4000/" + linkObj.alias}
+                {"http://localhost:5000/" + linkObj.alias}
               </Link>
               <Text>{linkObj.clicksCount}</Text>
             </div>

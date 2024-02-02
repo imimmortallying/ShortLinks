@@ -21,14 +21,8 @@ export const RedirectPage = ({ className }: RedirectPageProps) => {
             .then((originalLink)=>window.location.replace(originalLink));
     }, [])
 
-
-
-    // параметр отправить в бд
-    // если нашелся, то редирект
-    // если не нашелся, то вывести 'нет такой ссылки'
     return (
         <div className={classNames(cls.RedirectPage, {}, [className])}>
-            {/* {`redirect from ${linkAlias} to ${originalLink}`} */}
         </div>
     );
 };
